@@ -1,10 +1,9 @@
-const  express = require("express");
+const express = require("express");
 const Publication = require("./models/publication.js");
-const User = require("./models/User.js");
+const User = require("./controllers/UserController.js");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 
 dotenv.config();
 
@@ -55,8 +54,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
-// debug
+// TODO: debug
 app.get("/get-user", async (req, res) => {
   try {
     const user = await User.getUser();
@@ -94,3 +92,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
+
+//app.use('/chemin',Controller.fonctionAppelée)

@@ -47,8 +47,14 @@ class User {
   }
 
   static async getUser(){
-    // const sqlQuery = ;
-    const stmt = await pool.query("SELECT * FROM users");
+    const sqlQuery = "SELECT * FROM users";
+    const stmt = await pool.query(sqlQuery);
+    return stmt.rows;
+  }
+
+  static async dellUser(id){
+    const sqlQuery = "DELETE FROM users WHERE id = $1";
+    const stmt = await pool.query(sqlQuery, [id]);
     return stmt.rows;
   }
 }
