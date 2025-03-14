@@ -56,7 +56,7 @@ app.post("/register", async (req, res) => {
 });
 
 
-// debug
+// TODO: debug
 app.get("/get-user", async (req, res) => {
   try {
     const user = await User.getUser();
