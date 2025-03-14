@@ -1,7 +1,7 @@
-import pool from "../database/database.js";
+const {pool} = require("../database/database.js");
 
 class Publications {
-  static async getPublications() {
+  static async getAllPublications() {
     const sqlQuery = "select * from Publications";
     const stmt = await pool.query(sqlQuery);
     return stmt.rows;
