@@ -1,4 +1,6 @@
 import pool from "../database/database.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class User {
   static async register({ username, email, password, birthdate }) {
@@ -45,4 +47,4 @@ class User {
   }
 }
 
-module.exports = Book;
+module.exports = User;

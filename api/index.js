@@ -1,6 +1,11 @@
-const express = require("express");
-const Publication = require("./models/publication");
-require("dotenv").config();
+import express from "express";
+import Publication from "./models/publication.js";
+import User from "./models/User.js";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());

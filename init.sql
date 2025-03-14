@@ -1,6 +1,19 @@
 drop database if exists forum;
 create database forum;
 
+drop table if exists likes;
+drop table if exists comments;
+drop table if exists threads;
+drop table if exists users_groupes_roles;
+drop table if exists reports;
+drop table if exists publications;
+drop table if exists type_report;
+drop table if exists groupes;
+drop table if exists categories;
+drop table if exists private_messages;
+drop table if exists users;
+drop table if exists roles;
+
 create table roles(
     role_id serial primary key,
     name varchar(255) not null
@@ -12,8 +25,8 @@ create table users(
     email varchar(255) not null,
     password text not null,
     birthdate date not null,
-    gender varchar(100) not null,
-    bio text not null,
+    gender varchar(100),
+    bio text,
     avatar text,
     role_id int not null default 2,
     foreign key(role_id) references roles(role_id)

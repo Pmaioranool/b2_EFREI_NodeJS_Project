@@ -31,3 +31,5 @@ class Publications {
     return stmt;
   }
 }
+
+module.exports = Publications;
