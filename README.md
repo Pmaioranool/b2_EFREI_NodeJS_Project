@@ -47,7 +47,7 @@ npm run dev
 ### deuxième terminal
 
 ```bash
-cd api
+cd frontend
 npm i
 npm run dev
 ```
