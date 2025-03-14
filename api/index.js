@@ -1,9 +1,10 @@
-import express from "express";
-import Publication from "./models/publication.js";
-import User from "./models/User.js";
-import dotenv from "dotenv";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+const  express = require("express");
+const Publication = require("./models/publication.js");
+const User = require("./models/User.js");
+const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 dotenv.config();
 
@@ -49,6 +50,17 @@ app.post("/register", async (req, res) => {
   try {
     const newUser = await User.register(req.body);
     res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// debug
+app.get("/get-user", async (req, res) => {
+  try {
+    const user = await User.getUser();
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

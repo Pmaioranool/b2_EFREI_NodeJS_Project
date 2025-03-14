@@ -1,6 +1,6 @@
 // TODO : a faire
 
-import pool from '../database/database.js';
+const {pool} = require("../database/database.js");
 
 class Repports {
 
