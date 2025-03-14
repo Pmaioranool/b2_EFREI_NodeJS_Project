@@ -32,4 +32,35 @@ class Comments {
         const stmt = await pool.query(sqlQuery, [id]);
         return stmt;
     }
+
+    static async getCommentsByUser(id){
+        const sqlQuery = "select * from Comments inner join users where user_id = $1";
+        const stmt = await pool.query(sqlQuery, [id]);
+        return stmt.rows;
+    }
+
+    static async getCommentsByRoles(id){
+        const sqlQuery = "select * from Comments inner join roles where role_id = $1";
+        const stmt = await pool.query(sqlQuery, [id]);
+        return stmt.rows;
+    }
+
+    static async getCommentsByPublication(id){
+        const sqlQuery = "select * from Comments inner join publications where publication_id = $1";
+        const stmt = await pool.query(sqlQuery, [id]);
+        return stmt.rows;
+    }
+
+    static async getCommentsByComment(id){
+        const sqlQuery = "select * from Comments inner join Comments where comment_id = $1";
+        const stmt = await pool.query(sqlQuery, [id]);
+        return stmt.rows;
+    }
+
+    static async getCommentsByDate(){
+        const sqlQuery = "select * from Comments order by date";
+        const stmt = await pool.query(sqlQuery);
+        return stmt.rows;
+    }
+
 }
