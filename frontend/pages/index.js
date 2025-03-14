@@ -1,67 +1,104 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [books, setBooks] = useState([]);
+  const [user, setUser] = useState(null);
 
-  // Récupération des livres depuis l'API
+  // Récupération des informations de session (exemple)
   useEffect(() => {
-    fetch("http://localhost:3000/books")
+    fetch("/api/session")
       .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((err) => console.error("Erreur lors du chargement :", err));
+      .then((data) => setUser(data.user))
+      .catch((err) =>
+        console.error("Erreur lors de la récupération de la session :", err)
+      );
   }, []);
 
-  // Fonction pour supprimer un livre
-  const handleDelete = async (id) => {
-    const response = await fetch(`http://localhost:3000/books/${id}`, {
-      method: "DELETE",
-    });
-
-    if (response.ok) {
-      setBooks(books.filter((book) => book.id !== id)); // Met à jour l'affichage
-    } else {
-      console.error("Erreur lors de la suppression");
-    }
-  };
-
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-        Liste des Livres
-      </h1>
-      <a
-        href="/add"
-        className="block w-max mx-auto mb-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
-      >
-        Ajouter un Livre
-      </a>
-      <div className="bg-white shadow-md rounded-lg p-6">
-        {books.length === 0 ? (
-          <p className="text-gray-500 text-center">Aucun livre disponible.</p>
-        ) : (
-          <ul className="space-y-4">
-            {books.map((book) => (
-              <li
-                key={book.id}
-                className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition"
-              >
-                <a
-                  href={`/book/${book.id}`}
-                  className="text-lg font-semibold text-gray-700 hover:text-blue-500"
-                >
-                  {book.title} - {book.author} ({book.year})
-                </a>
-                <button
-                  onClick={() => handleDelete(book.id)}
-                  className="px-3 py-1 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition"
-                >
-                  Supprimer
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+    <div>
+      <div className="home-title-container">
+        <h1 className="title-home">
+          Bienvenue sur DiversHelper{" "}
+          {user && user.nom ? user.nom : ""}!
+        </h1>
+        <p>
+          Le site des véritables Helldivers pour pouvoir distribuer la démocratie
+        </p>
       </div>
+
+      <div className="container-main">
+        <div className="container-col">
+          <div className="capture">
+            <div id="campaign-container" className="campaign-info">
+              <h3>Loading campaign information...</h3>
+            </div>
+          </div>
+        </div>
+        <article>
+          <h2>L’appel de la Démocratie</h2>
+          <p>
+            La Super-Terre, bastion de la véritable démocratie, est menacée par
+            des hordes d’aliens qui refusent de se soumettre aux principes
+            démocratiques universels. Ces ennemis de la liberté - insectes
+            titanesques, cyborgs violents et autres monstruosités - ne comprennent
+            qu'un langage : celui des armes. Alors, pour protéger ces valeurs
+            précieuses, il est de votre devoir de vous battre. Brutalement.
+          </p>
+
+          <h2>Collaboration Obligatoire</h2>
+          <p>
+            En équipe, jusqu'à quatre joueurs, la coopération est essentielle.
+            Attention : dans cette démocratie militaire, chaque tir compte, même
+            ceux qui touchent vos alliés. La violence est un outil collectif, mais
+            elle exige discipline et coordination. Après tout, rien ne dit "esprit
+            d’équipe" comme un lance-roquettes tiré un peu trop tôt.
+          </p>
+
+          <h2>L’équipement : Liberté de Choix, Puissance Obligatoire</h2>
+          <p>
+            Chaque mission est une occasion d’exercer vos droits démocratiques à
+            utiliser l’arme de votre choix : fusils laser, mortiers lourds, ou encore
+            frappes nucléaires. La variété des gadgets et stratagèmes à votre
+            disposition reflète la diversité de pensée… mais aussi la force de
+            persuasion nécessaire pour soumettre vos ennemis.
+          </p>
+
+          <h2>Pour la Démocratie, Jusqu’au Sacrifice</h2>
+          <p>
+            Le sacrifice personnel est au cœur de la philosophie des Helldivers.
+            Qu’il s’agisse de foncer dans une vague d’ennemis pour activer un
+            objectif ou de vous faire écraser par une capsule de ravitaillement mal
+            placée, tout acte de violence au service de la Super-Terre est une preuve
+            de votre engagement.
+          </p>
+
+          <h2>Conclusion : La Violence au Service de l’Idéal</h2>
+          <p>
+            Dans <em>Helldivers 2</em>, la démocratie ne se défend pas avec des
+            discours, mais avec des armes surchauffées et des explosions
+            tonitruantes. Chaque balle tirée est un message envoyé à l’univers : la
+            liberté n’est pas gratuite, et certains idéaux valent tous les carnages
+            nécessaires. Alors, chaussez vos bottes, chargez vos fusils, et préparez-vous
+            à exporter la démocratie… l'arme au poing.
+          </p>
+
+          <p className="textToRight">
+            <strong>Super-Terre compte sur vous !</strong>
+          </p>
+        </article>
+      </div>
+
+      <iframe
+        width="854"
+        height="480"
+        src="https://www.youtube.com/embed/OEx-6BmiN-c?si=-PkpjhbVtNSt6QtX&autoplay=1&mute=1"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
+
+      <script src="/javascripts/script.js"></script>
     </div>
   );
 }
