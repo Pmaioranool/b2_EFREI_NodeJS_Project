@@ -32,11 +32,10 @@ class categories {
         return stmt;
     }
 
-    static async getSubcategories(){
+    static async getSubcategories(id){
         const sqlQuery = "select * from categories where parent = $1";
         const stmt = await pool.query(sqlQuery,[id]);
         return stmt.rows;
     }
 
-    
 }
