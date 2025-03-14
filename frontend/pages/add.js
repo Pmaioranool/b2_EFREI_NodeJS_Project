@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-export default function AddBook() {
+export default function AddPublication() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [year, setYear] = useState("");
@@ -9,7 +9,7 @@ export default function AddBook() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3000/books", {
+    const response = await fetch("http://localhost:3000/publications", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, author, year: parseInt(year) }),
@@ -20,11 +20,26 @@ export default function AddBook() {
 
   return (
     <div>
-      <h1>Ajouter un Livre</h1>
+      <h1>Ajouter une Publication</h1>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Titre" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <input type="text" placeholder="Auteur" value={author} onChange={(e) => setAuthor(e.target.value)} />
-        <input type="number" placeholder="Année" value={year} onChange={(e) => setYear(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Titre"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Auteur"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Année"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+        />
         <button type="submit">Ajouter</button>
       </form>
     </div>

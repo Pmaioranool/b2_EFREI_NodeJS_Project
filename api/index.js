@@ -39,6 +39,16 @@ app.post("/publications", async (req, res) => {
   }
 });
 
+// Register
+app.post("/register", async (req, res) => {
+  try {
+    const newUser = await User.register(req.body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // PUT PUBLICATION
 app.put("/publications/:id", async (req, res) => {
   try {
