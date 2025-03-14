@@ -17,17 +17,9 @@ export default function Header({ user, userRole }) {
           <li>
             <Link href="/">Accueil</Link>
           </li>
-          <li>
-            <Link href="/map">Carte</Link>
-          </li>
-          <li>
-            <Link href="/species">Bestiaire</Link>
-          </li>
+          
           <li>
             <Link href="/forum">Forums</Link>
-          </li>
-          <li>
-            <Link href="/order">Ordre Prioritaire</Link>
           </li>
           {user ? (
             <>

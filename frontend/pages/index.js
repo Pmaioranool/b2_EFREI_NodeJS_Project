@@ -14,7 +14,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="main-container">
       <div className="home-title-container">
         <h1 className="title-home">
           Bienvenue sur DiversHelper{" "}
@@ -26,13 +26,7 @@ export default function Home() {
       </div>
 
       <div className="container-main">
-        <div className="container-col">
-          <div className="capture">
-            <div id="campaign-container" className="campaign-info">
-              <h3>Loading campaign information...</h3>
-            </div>
-          </div>
-        </div>
+    
         <article>
           <h2>L’appel de la Démocratie</h2>
           <p>

@@ -15,7 +15,7 @@
   --hdBackground: #6868686b;
 }
 
-body {
+#__next {
   background: repeating-linear-gradient(
     45deg,
     rgb(20, 20, 20),
@@ -27,7 +27,8 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  min-height: 100vh;
+  min-height:100vh;
+  align-items: center;
 }
 ::-webkit-scrollbar {
   width: 1em;
@@ -712,10 +713,12 @@ h3 {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: flex-start;
+  align-content: center;
+  align-items: center;
   margin: 5rem;
 }
+
+
 
 .species-container {
   width: 100%;

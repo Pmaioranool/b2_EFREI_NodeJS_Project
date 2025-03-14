@@ -1,6 +1,5 @@
 // pages/404.js
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import Link from 'next/link';
 
 export default function Custom404() {
@@ -21,15 +20,8 @@ export default function Custom404() {
     const truncatedPath = truncatePath(currentUrl, 20); // Tronque l'URL si nécessaire
 
     return (
-        <>
-            <Head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <link rel="stylesheet" href="/stylesheets/style.css" />
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-                <title>DiversHelper - 404 Page Not Found</title>
-            </Head>
-            <body className="centered-404">
+       
+            <article className="centered-404">
                 <section className="container-404">
                     <h1>
                         <i className="fa-solid fa-triangle-exclamation rouge"></i> Nouveau message reçu{' '}
@@ -44,7 +36,6 @@ export default function Custom404() {
                         </p>
                     </div>
                 </section>
-            </body>
-        </>
+            </article>
     );
 }
