@@ -1,26 +1,26 @@
 const express = require("express");
-const Book = require("./models/book");
+const Publication = require("./models/publication");
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
 
 // Endpoints
-app.get("/books", async (req, res) => {
+app.get("/publications", async (req, res) => {
   try {
-    const books = await Book.getAllBooks();
-    res.status(200).json(books);
+    const publications = await Publication.getAllPublications();
+    res.status(200).json(publications);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 // GET SPECIFIC
-app.get("/books/:id", async (req, res) => {
+app.get("/publications/:id", async (req, res) => {
   try {
-    const book = await Book.getBookById(req.params.id);
-    book
-      ? res.status(200).json(book)
+    const publication = await Publication.getPublicationById(req.params.id);
+    publication
+      ? res.status(200).json(publication)
       : res.status(404).json({
           message: "Pas trouvé",
         });
@@ -29,30 +29,43 @@ app.get("/books/:id", async (req, res) => {
   }
 });
 
-// POST BOOK
-app.post("/books", async (req, res) => {
+// POST PUBLICATION
+app.post("/publications", async (req, res) => {
   try {
-    const newBook = await Book.createBook(req.body);
-    res.status(201).json(newBook);
+    const newPublication = await Publication.createPublication(req.body);
+    res.status(201).json(newPublication);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// PUT BOOK
-app.put("/books/:id", async (req, res) => {
+// Register
+app.post("/register", async (req, res) => {
   try {
-    const updatedBook = await Book.updateBook(req.params.id, req.body);
-    res.status(200).json(updatedBook);
+    const newUser = await User.register(req.body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT PUBLICATION
+app.put("/publications/:id", async (req, res) => {
+  try {
+    const updatedPublication = await Publication.updatePublication(
+      req.params.id,
+      req.body
+    );
+    res.status(200).json(updatedPublication);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 // DELETE
-app.delete("/books/:id", async (req, res) => {
+app.delete("/publications/:id", async (req, res) => {
   try {
-    await Book.deleteBook(req.params.id);
+    await Publication.deletePublication(req.params.id);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: error.message });
