@@ -1,7 +1,7 @@
 const {pool} = require("../database/database.js");
 
 
-class categories {
+class Categories {
 
     static async getCategories(){
         const sqlQuery = "select * from categories";
@@ -40,3 +40,5 @@ class categories {
     }
 
 }
+
+module.exports = Categories;
