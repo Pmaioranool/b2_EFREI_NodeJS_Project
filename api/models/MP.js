@@ -33,3 +33,5 @@ class MP {
         return stmt;
     }
 }
+
+module.exports = MP;

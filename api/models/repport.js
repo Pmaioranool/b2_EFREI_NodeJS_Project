@@ -34,3 +34,5 @@ class Repports {
         return stmt;
     }
 }
+
+module.exports = Repports;

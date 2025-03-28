@@ -33,3 +33,5 @@ class Groupes {
         return stmt;
     }
 }
+
+module.exports = Groupes;
