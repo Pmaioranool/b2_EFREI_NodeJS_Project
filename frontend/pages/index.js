@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [user, setUser] = useState(null);
 
-  // Récupération des informations de session (exemple)
-  useEffect(() => {
-    fetch("/api/session")
-      .then((res) => res.json())
-      .then((data) => setUser(data.user))
-      .catch((err) =>
-        console.error("Erreur lors de la récupération de la session :", err)
-      );
-  }, []);
+  
 
   return (
     <div className="main-container">
       <div className="home-title-container">
         <h1 className="title-home">
-          Bienvenue sur DiversHelper{" "}
-          {user && user.nom ? user.nom : ""}!
+          Bienvenue sur DiversHelper !
         </h1>
         <p>
           Le site des véritables Helldivers pour pouvoir distribuer la démocratie
