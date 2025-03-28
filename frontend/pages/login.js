@@ -15,11 +15,40 @@ export default function AuthForm() {
     }
   }, [isSignUp]); // Met à jour l'affichage quand isSignUp change
 
+  const handleSubmitRegister = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const response = await fetch("http://localhost:3000/api/users", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    setMessage(data);
+  };
+
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const response = await fetch("http://localhost:3000/api/users", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    setMessage(data);
+    if (data.type === "success") {
+      window.location.href = "/";
+    }
+  };
+
   return (
     <div className="container" id="container">
       {/* Formulaire d'inscription */}
       <div className="form-container sign-up">
-        <form action="/log" method="post">
+        <form onSubmit={handleSubmitRegister}>
           <h1>Créer un compte</h1>
           <div className="social-icons">
             <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
@@ -39,7 +68,7 @@ export default function AuthForm() {
 
       {/* Formulaire de connexion */}
       <div className="form-container sign-in">
-        <form action="/log" method="post">
+        <form onSubmit={handleSubmitLogin}>
           <h1>Connexion</h1>
           <div className="social-icons">
             <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>

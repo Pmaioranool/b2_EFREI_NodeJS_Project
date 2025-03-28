@@ -33,88 +33,89 @@ app.get("/", (req, res) => {
 });
 
 // Routes Publications
-app.get("/publications", PublicationController.getAll);
-app.post("/publications", PublicationController.post);
-app.get("/publications/:id", PublicationController.get);
-app.put("/publications/:id", PublicationController.put);
-app.delete("/publications/:id", PublicationController.delete);
+app.get("/api/publications", PublicationController.getAll);
+app.post("/api/publications", PublicationController.post);
+app.get("/api/publications/:id", PublicationController.get);
+app.put("/api/publications/:id", PublicationController.put);
+app.delete("/api/publications/:id", PublicationController.delete);
 
 // Routes Categories
-app.get("/categories", CategoryController.getAll);
-app.post("/categories", CategoryController.post);
-app.get("/categories/:id", CategoryController.get);
-app.put("/categories/:id", CategoryController.put);
-app.delete("/categories/:id", CategoryController.delete);
+app.get("/api/categories", CategoryController.getAll);
+app.post("/api/categories", CategoryController.post);
+app.get("/api/categories/:id", CategoryController.get);
+app.put("/api/categories/:id", CategoryController.put);
+app.delete("/api/categories/:id", CategoryController.delete);
 
 // Routes Commentaires
-app.get("/comments", CommentController.getAll);
-app.post("/comments", CommentController.post);
-app.get("/comments/:id", CommentController.get);
-app.put("/comments/:id", CommentController.put);
-app.delete("/comments/:id", CommentController.delete);
+app.get("/api/comments", CommentController.getAll);
+app.post("/api/comments", CommentController.post);
+app.get("/api/comments/:id", CommentController.get);
+app.put("/api/comments/:id", CommentController.put);
+app.delete("/api/comments/:id", CommentController.delete);
 
 // Routes Groupes
-app.get("/groups", GroupController.getAll);
-app.post("/groups", GroupController.post);
-app.get("/groups/:id", GroupController.get);
-app.put("/groups/:id", GroupController.put);
-app.delete("/groups/:id", GroupController.delete);
+app.get("/api/groups", GroupController.getAll);
+app.post("/api/groups", GroupController.post);
+app.get("/api/groups/:id", GroupController.get);
+app.put("/api/groups/:id", GroupController.put);
+app.delete("/api/groups/:id", GroupController.delete);
 
 // Routes Messages Privés (MP)
-app.get("/mp", MPController.getAll);
-app.post("/mp", MPController.post);
-app.get("/mp/:id", MPController.get);
-app.put("/mp/:id", MPController.put);
-app.delete("/mp/:id", MPController.delete);
+app.get("/api/mp", MPController.getAll);
+app.post("/api/mp", MPController.post);
+app.get("/api/mp/:id", MPController.get);
+app.put("/api/mp/:id", MPController.put);
+app.delete("/api/mp/:id", MPController.delete);
 
 // Routes Reports
-app.get("/reports", ReportController.getAll);
-app.post("/reports", ReportController.post);
-app.get("/reports/:id", ReportController.get);
-app.put("/reports/:id", ReportController.put);
-app.delete("/reports/:id", ReportController.delete);
+app.get("/api/reports", ReportController.getAll);
+app.post("/api/reports", ReportController.post);
+app.get("/api/reports/:id", ReportController.get);
+app.put("/api/reports/:id", ReportController.put);
+app.delete("/api/reports/:id", ReportController.delete);
 
 // Routes Rôles
-app.get("/roles", RoleController.getAll);
-app.post("/roles", RoleController.post);
-app.get("/roles/:id", RoleController.get);
-app.put("/roles/:id", RoleController.put);
-app.delete("/roles/:id", RoleController.delete);
+app.get("/api/roles", RoleController.getAll);
+app.post("/api/roles", RoleController.post);
+app.get("/api/roles/:id", RoleController.get);
+app.put("/api/roles/:id", RoleController.put);
+app.delete("/api/roles/:id", RoleController.delete);
 
 // Routes Threads
-app.get("/threads", ThreadsController.getAll);
-app.post("/threads", ThreadsController.post);
-app.get("/threads/:id", ThreadsController.get);
-app.put("/threads/:id", ThreadsController.put);
-app.delete("/threads/:id", ThreadsController.delete);
+app.get("/api/threads", ThreadsController.getAll);
+app.post("/api/threads", ThreadsController.post);
+app.get("/api/threads/:id", ThreadsController.get);
+app.put("/api/threads/:id", ThreadsController.put);
+app.delete("/api/threads/:id", ThreadsController.delete);
 
 // Routes Utilisateurs
-app.get("/users", UserController.getAll);
-app.post("/users", UserController.post);
-app.get("/users/:id", UserController.get);
-app.put("/users/:id", UserController.put);
-app.delete("/users/:id", UserController.delete);
+app.get("/api/users", UserController.getAll);
+app.post("/api/users/register", UserController.post);
+app.get("/api/users/:id", UserController.get);
+app.put("/api/users/:id", UserController.put);
+app.delete("/api/users/:id", UserController.delete);
+app.post("/api/users/login", UserController.login);
 
-// Routes Utilisateurs
-app.get("/likes", likesController.getAll);
-app.post("/likes", likesController.post);
-app.get("/likes/:id", likesController.get);
-app.put("/likes/:id", likesController.put);
-app.delete("/likes/:id", likesController.delete);
+// Routes likes
+app.get("/api/likes", likesController.getAll);
+app.post("/api/likes", likesController.post);
+app.get("/api/likes/:id", likesController.get);
+app.put("/api/likes/:id", likesController.put);
+app.delete("/api/likes/:id", likesController.delete);
 
-// Routes Utilisateurs
-app.get("/UGR", UGRController.getAll);
-app.post("/UGR", UGRController.post);
-app.get("/UGR/:id", UGRController.get);
-app.put("/UGR/:id", UGRController.put);
+// Routes UGR
+app.get("/api/UGR", UGRController.getAll);
+app.post("/api/UGR", UGRController.post);
+app.get("/api/UGR/:id", UGRController.get);
+app.put("/api/UGR/:id", UGRController.put);
 app.delete("/UGR/:id", UGRController.delete);
 
-// Routes Utilisateurs
-app.get("/TypeReport", TypeReportController.getAll);
-app.post("/TypeReport", TypeReportController.post);
-app.get("/TypeReport/:id", TypeReportController.get);
-app.put("/TypeReport/:id", TypeReportController.put);
-app.delete("/TypeReport/:id", TypeReportController.delete);
+// Routes TypeReport
+app.get("/api/TypeReport", TypeReportController.getAll);
+app.post("/api/TypeReport", TypeReportController.post);
+app.get("/api/TypeReport/:id", TypeReportController.get);
+app.put("/api/TypeReport/:id", TypeReportController.put);
+app.delete("/api/TypeReport/:id", TypeReportController.delete);
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
