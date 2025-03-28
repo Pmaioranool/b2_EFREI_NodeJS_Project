@@ -1,96 +1,128 @@
 const express = require("express");
-const Publication = require("./models/publication.js");
-const User = require("./controllers/UserController.js");
+// const cors = require("cors");
+// const helmet = require("helmet");
+// const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+
+const {
+  CategoryController,
+  CommentController,
+  GroupController,
+  MPController,
+  PublicationController,
+  ReportController,
+  RoleController,
+  ThreadsController,
+  UserController,
+  likesController,
+  UGRController,
+  TypeReportController
+} = require("./controllers/Controller.js");
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+// app.use(cors());
+// app.use(helmet());
+// app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
-// Endpoints
-app.get("/publications", async (req, res) => {
-  try {
-    const publications = await Publication.getAllPublications();
-    res.status(200).json(publications);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Message d'accueil
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur mon API !");
 });
 
-// GET SPECIFIC
-app.get("/publications/:id", async (req, res) => {
-  try {
-    const publication = await Publication.getPublicationById(req.params.id);
-    publication
-      ? res.status(200).json(publication)
-      : res.status(404).json({
-          message: "Pas trouvé",
-        });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Routes Publications
+app.get("/publications", PublicationController.getAll);
+app.post("/publications", PublicationController.post);
+app.get("/publications/:id", PublicationController.get);
+app.put("/publications/:id", PublicationController.put);
+app.delete("/publications/:id", PublicationController.delete);
 
-// POST PUBLICATION
-app.post("/publications", async (req, res) => {
-  try {
-    const newPublication = await Publication.createPublication(req.body);
-    res.status(201).json(newPublication);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Routes Categories
+app.get("/categories", CategoryController.getAll);
+app.post("/categories", CategoryController.post);
+app.get("/categories/:id", CategoryController.get);
+app.put("/categories/:id", CategoryController.put);
+app.delete("/categories/:id", CategoryController.delete);
 
-// Register
-app.post("/register", async (req, res) => {
-  try {
-    const newUser = await User.register(req.body);
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Routes Commentaires
+app.get("/comments", CommentController.getAll);
+app.post("/comments", CommentController.post);
+app.get("/comments/:id", CommentController.get);
+app.put("/comments/:id", CommentController.put);
+app.delete("/comments/:id", CommentController.delete);
 
-// TODO: debug
-app.get("/get-user", async (req, res) => {
-  try {
-    const user = await User.getUser();
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Routes Groupes
+app.get("/groups", GroupController.getAll);
+app.post("/groups", GroupController.post);
+app.get("/groups/:id", GroupController.get);
+app.put("/groups/:id", GroupController.put);
+app.delete("/groups/:id", GroupController.delete);
 
-// PUT PUBLICATION
-app.put("/publications/:id", async (req, res) => {
-  try {
-    const updatedPublication = await Publication.updatePublication(
-      req.params.id,
-      req.body
-    );
-    res.status(200).json(updatedPublication);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Routes Messages Privés (MP)
+app.get("/mp", MPController.getAll);
+app.post("/mp", MPController.post);
+app.get("/mp/:id", MPController.get);
+app.put("/mp/:id", MPController.put);
+app.delete("/mp/:id", MPController.delete);
 
-// DELETE
-app.delete("/publications/:id", async (req, res) => {
-  try {
-    await Publication.deletePublication(req.params.id);
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Routes Reports
+app.get("/reports", ReportController.getAll);
+app.post("/reports", ReportController.post);
+app.get("/reports/:id", ReportController.get);
+app.put("/reports/:id", ReportController.put);
+app.delete("/reports/:id", ReportController.delete);
+
+// Routes Rôles
+app.get("/roles", RoleController.getAll);
+app.post("/roles", RoleController.post);
+app.get("/roles/:id", RoleController.get);
+app.put("/roles/:id", RoleController.put);
+app.delete("/roles/:id", RoleController.delete);
+
+// Routes Threads
+app.get("/threads", ThreadsController.getAll);
+app.post("/threads", ThreadsController.post);
+app.get("/threads/:id", ThreadsController.get);
+app.put("/threads/:id", ThreadsController.put);
+app.delete("/threads/:id", ThreadsController.delete);
+
+// Routes Utilisateurs
+app.get("/users", UserController.getAll);
+app.post("/users", UserController.post);
+app.get("/users/:id", UserController.get);
+app.put("/users/:id", UserController.put);
+app.delete("/users/:id", UserController.delete);
+
+// Routes Utilisateurs
+app.get("/likes", likesController.getAll);
+app.post("/likes", likesController.post);
+app.get("/likes/:id", likesController.get);
+app.put("/likes/:id", likesController.put);
+app.delete("/likes/:id", likesController.delete);
+
+// Routes Utilisateurs
+app.get("/UGR", UGRController.getAll);
+app.post("/UGR", UGRController.post);
+app.get("/UGR/:id", UGRController.get);
+app.put("/UGR/:id", UGRController.put);
+app.delete("/UGR/:id", UGRController.delete);
+
+// Routes Utilisateurs
+app.get("/TypeReport", TypeReportController.getAll);
+app.post("/TypeReport", TypeReportController.post);
+app.get("/TypeReport/:id", TypeReportController.get);
+app.put("/TypeReport/:id", TypeReportController.put);
+app.delete("/TypeReport/:id", TypeReportController.delete);
+
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Une erreur interne s'est produite." });
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
 });
-
-//app.use('/chemin',Controller.fonctionAppelée)

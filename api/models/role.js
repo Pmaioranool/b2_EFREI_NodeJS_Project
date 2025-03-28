@@ -33,3 +33,5 @@ class Roles {
         return stmt;
     }
 }
+
+module.exports = Roles;
