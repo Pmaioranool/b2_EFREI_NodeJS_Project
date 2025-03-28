@@ -33,3 +33,5 @@ class Threads {
         return stmt;
     }
 }
+
+module.exports = Threads;
