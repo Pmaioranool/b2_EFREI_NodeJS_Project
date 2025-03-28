@@ -21,6 +21,14 @@ class UserController {
         }
     }
 
+    static async loginPost(req,res){
+        try {
+            const user = await User.login(req.body);
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 

@@ -15,6 +15,7 @@ console.log(Publication);
 // console.log(User);
 // Endpoints
 app.post('/register', User.registerPost);
+app.post('/login', User.loginPost);
 app.get('/get-user',User.Debug);
 
 app.get("/publications", Publication.publicationGetAll);
