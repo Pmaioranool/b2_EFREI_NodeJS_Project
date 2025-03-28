@@ -112,7 +112,7 @@ const ThreadsController = {
   delete: (req, res) => Controllers.delete(Threads, req, res),
 };
 
-const userController = {
+const UserController = {
   getAll: (req, res) => Controllers.getAll(User, req, res),
   get: (req, res) => Controllers.getOne(User, req, res),
   post: (req, res) => Controllers.create(User, req, res),
