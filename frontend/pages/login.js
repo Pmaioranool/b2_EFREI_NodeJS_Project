@@ -21,7 +21,7 @@ export default function AuthForm() {
       <div className="form-container sign-up">
         <form action="/log" method="post">
           <h1>Créer un compte</h1>
-          <div className="social-icons">
+          {/* <div className="social-icons">
             <a href="#" className="icon">
               <i className="fa-brands fa-google-plus-g"></i>
             </a>
@@ -34,7 +34,7 @@ export default function AuthForm() {
             <a href="#" className="icon">
               <i className="fa-brands fa-steam"></i>
             </a>
-          </div>
+          </div> */}
           <span>ou utiliser votre email pour créer votre compte</span>
           <input type="hidden" name="register" value="register" />
           <input type="email" name="email" placeholder="email" required />
@@ -59,7 +59,7 @@ export default function AuthForm() {
       <div className="form-container sign-in">
         <form action="/" method="post">
           <h1>Connexion</h1>
-          <div className="social-icons">
+          {/* <div className="social-icons">
             <a href="#" className="icon">
               <i className="fa-brands fa-google-plus-g"></i>
             </a>
@@ -72,7 +72,7 @@ export default function AuthForm() {
             <a href="#" className="icon">
               <i className="fa-brands fa-steam"></i>
             </a>
-          </div>
+          </div> */}
           <span>ou utiliser votre email et mot de passe</span>
           <input type="hidden" name="register" value="login" />
           <input type="email" name="email" placeholder="email" required />
