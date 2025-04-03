@@ -27,19 +27,18 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  min-height:100vh;
+  min-height: 100vh;
   align-items: center;
 }
 ::-webkit-scrollbar {
   width: 1em;
   background: var(--hdBlack);
-  
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--hdBackground);
-    /* Dégradé de couleur */
-     /* Your image */
+  /* Dégradé de couleur */
+  /* Your image */
   background-repeat: no-repeat; /* No repeat */
   background-position: bottom;
 }
@@ -690,6 +689,7 @@ h3 {
   background-color: rgba(255, 0, 0, 0.762);
   padding: 5px 15px;
   margin-bottom: 10px;
+  z-index: 999;
 }
 
 .success {
@@ -700,6 +700,7 @@ h3 {
   background-color: rgba(166, 255, 33, 0.762);
   padding: 5px 15px;
   margin-bottom: 10px;
+  z-index: 999;
 }
 
 /* Species Page */
@@ -717,8 +718,6 @@ h3 {
   align-items: center;
   margin: 5rem;
 }
-
-
 
 .species-container {
   width: 100%;
