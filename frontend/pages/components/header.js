@@ -1,8 +1,10 @@
 // components/Header.js
 import Link from "next/link";
 
-const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-const adminToken = typeof window !== "undefined" ? localStorage.getItem("admin") : null;
+const token =
+  typeof window !== "undefined" ? localStorage.getItem("token") : null;
+const adminToken =
+  typeof window !== "undefined" ? localStorage.getItem("admin") : null;
 
 export default function Header({ user, userRole }) {
   return (
@@ -31,6 +33,9 @@ export default function Header({ user, userRole }) {
                   <Link href="/admin">Admin</Link>
                 </li>
               )}
+              <li>
+                <Link href="/dashboard">Dashboard</Link>
+              </li>
               <li>
                 <Link href="/logout" id="logout">
                   Déconnexion
