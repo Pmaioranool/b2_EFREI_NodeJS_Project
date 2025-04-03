@@ -2,103 +2,76 @@ import { useEffect, useState } from "react";
 import withAuth from "./components/withAuth";
 
 const Dashboard = () => {
-  const [userProfile, setUserProfile] = useState(null); // Stocke les données utilisateur
-  const [editMode, setEditMode] = useState(false); // Active ou désactive le mode édition
-  const [formData, setFormData] = useState({
-    name: "",
-  });
-  const [loading, setLoading] = useState(true); // Indicateur de chargement
-  const [error, setError] = useState(null); // Gestion des erreurs
+  const [userProfile, setUserProfile] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ username: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Récupération des données utilisateur
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Token récupéré :", token);
 
     if (token) {
       fetch("http://localhost:3000/api/token/decrypt", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => {
-          if (!response.ok) {
+          if (!response.ok)
             throw new Error(
               "Erreur lors de la récupération des données utilisateur."
             );
-          }
           return response.json();
         })
         .then((data) => {
-          console.log("Données utilisateur récupérées :", data);
           setUserProfile(data);
-          setFormData({ name: data.name }); // Pré-remplit le formulaire avec le nom
+          setFormData({ username: data.username });
         })
-        .catch((error) => {
-          console.error("Erreur :", error.message);
+        .catch(() => {
           setError("Impossible de charger les informations utilisateur.");
-          window.location.href = "/login"; // Redirige vers la page de connexion
+          window.location.href = "/login";
         })
         .finally(() => setLoading(false));
     } else {
-      console.error(
-        "Aucun token trouvé. Redirection vers la page de connexion."
-      );
-      window.location.href = "/login"; // Redirige si aucun token n'est trouvé
+      window.location.href = "/login";
     }
   }, []);
 
-  // Gestion des changements dans le formulaire
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Soumission du formulaire pour mettre à jour le nom
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     if (token) {
-      console.log("Données envoyées :", formData); // Log des données envoyées
       fetch("http://localhost:3000/api/dashboard/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ username: formData.username }),
       })
         .then((response) => {
-          console.log("Statut de la réponse :", response.status); // Log du statut HTTP
           if (!response.ok) {
-            return response.json().then((error) => {
-              console.error("Erreur API :", error); // Log de l'erreur renvoyée par l'API
-              throw new Error(error.message || "Erreur inconnue");
-            });
+            throw new Error(
+              "Erreur lors de la mise à jour du nom d'utilisateur."
+            );
           }
           return response.json();
         })
         .then((updatedData) => {
-          console.log("Profil mis à jour :", updatedData);
           setUserProfile(updatedData);
-          setEditMode(false); // Désactive le mode édition après la mise à jour
+          setEditMode(false);
         })
-        .catch((error) => {
-          console.error("Erreur lors de la mise à jour :", error.message);
-          setError("Impossible de mettre à jour le profil.");
-        });
+        .catch(() => setError("Impossible de mettre à jour le profil."));
     }
   };
 
-  if (loading) {
-    return <p>Chargement des informations utilisateur...</p>;
-  }
-
-  if (error) {
-    return <p style={{ color: "red" }}>{error}</p>;
-  }
+  if (loading) return <p>Chargement des informations utilisateur...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <div>
@@ -106,24 +79,21 @@ const Dashboard = () => {
       {userProfile ? (
         <div>
           <p>
-            <strong>Nom :</strong> {userProfile.name}
-          </p>{" "}
-          {/* Affiche toujours le nom */}
+            <strong>Nom d'utilisateur :</strong> {userProfile.username}
+          </p>
           {!editMode ? (
-            <div>
-              <button onClick={() => setEditMode(true)}>Modifier le nom</button>
-            </div>
+            <button onClick={() => setEditMode(true)}>
+              Modifier le nom d'utilisateur
+            </button>
           ) : (
             <form onSubmit={handleFormSubmit}>
-              <div>
-                <label>Nom :</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                />
-              </div>
+              <input
+                type="text"
+                name="username"
+                value={formData.username || ""}
+                onChange={handleInputChange}
+                required
+              />
               <button type="submit">Enregistrer</button>
               <button type="button" onClick={() => setEditMode(false)}>
                 Annuler

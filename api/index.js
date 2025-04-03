@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-// const helmet = require("helmet");
-// const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
 
 const {
@@ -24,113 +22,154 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*", // ou "*" pour autoriser toutes les origines
-    credentials: true, // si vous gérez des cookies ou des sessions
-  })
-);
-// app.use(helmet());
-// app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+app.use(cors({ origin: "*", credentials: true }));
 
 // Message d'accueil
-app.get("/api/", (req, res) => {
-  res.send("Bienvenue sur mon API !");
-});
+app.get("/api/", (req, res) => res.send("Bienvenue sur mon API !"));
 
 // Routes Publications
-app.get("/api/publications", PublicationController.getAll);
-app.post("/api/publications", PublicationController.post);
-app.get("/api/publications/:id", PublicationController.get);
-app.put("/api/publications/:id", PublicationController.put);
-app.delete("/api/publications/:id", PublicationController.delete);
+app
+  .route("/api/publications")
+  .get(PublicationController.getAll)
+  .post(PublicationController.post);
+
+app
+  .route("/api/publications/:id")
+  .get(PublicationController.get)
+  .put(PublicationController.put)
+  .delete(PublicationController.delete);
+
 app.get("/api/publications/groups/:id", PublicationController.getByGroup);
 
 // Routes Categories
-app.get("/api/categories", CategoryController.getAll);
-app.post("/api/categories", CategoryController.post);
-app.get("/api/categories/:id", CategoryController.get);
-app.put("/api/categories/:id", CategoryController.put);
-app.delete("/api/categories/:id", CategoryController.delete);
+app
+  .route("/api/categories")
+  .get(CategoryController.getAll)
+  .post(CategoryController.post);
+
+app
+  .route("/api/categories/:id")
+  .get(CategoryController.get)
+  .put(CategoryController.put)
+  .delete(CategoryController.delete);
 
 // Routes Commentaires
-app.get("/api/comments", CommentController.getAll);
-app.post("/api/comments", CommentController.post);
-app.get("/api/comments/:id", CommentController.get);
-app.put("/api/comments/:id", CommentController.put);
-app.delete("/api/comments/:id", CommentController.delete);
+app
+  .route("/api/comments")
+  .get(CommentController.getAll)
+  .post(CommentController.post);
+
+app
+  .route("/api/comments/:id")
+  .get(CommentController.get)
+  .put(CommentController.put)
+  .delete(CommentController.delete);
+
 app.get("/api/comments/publication/:id", CommentController.getByPublication);
 
 // Routes Groupes
-app.get("/api/groups", GroupController.getAll);
-app.post("/api/groups", GroupController.post);
-app.get("/api/groups/:id", GroupController.get);
-app.put("/api/groups/:id", GroupController.put);
-app.delete("/api/groups/:id", GroupController.delete);
+app.route("/api/groups").get(GroupController.getAll).post(GroupController.post);
+
+app
+  .route("/api/groups/:id")
+  .get(GroupController.get)
+  .put(GroupController.put)
+  .delete(GroupController.delete);
+
 app.get("/api/groups/category/:id", GroupController.getGroupesByCategory);
 
 // Routes Messages Privés (MP)
-app.get("/api/mp", MPController.getAll);
-app.post("/api/mp", MPController.post);
-app.get("/api/mp/:id", MPController.get);
-app.put("/api/mp/:id", MPController.put);
-app.delete("/api/mp/:id", MPController.delete);
+app.route("/api/mp").get(MPController.getAll).post(MPController.post);
+
+app
+  .route("/api/mp/:id")
+  .get(MPController.get)
+  .put(MPController.put)
+  .delete(MPController.delete);
 
 // Routes Reports
-app.get("/api/reports", ReportController.getAll);
-app.post("/api/reports", ReportController.post);
-app.get("/api/reports/:id", ReportController.get);
-app.put("/api/reports/:id", ReportController.put);
-app.delete("/api/reports/:id", ReportController.delete);
+app
+  .route("/api/reports")
+  .get(ReportController.getAll)
+  .post(ReportController.post);
+
+app
+  .route("/api/reports/:id")
+  .get(ReportController.get)
+  .put(ReportController.put)
+  .delete(ReportController.delete);
 
 // Routes Rôles
-app.get("/api/roles", RoleController.getAll);
-app.post("/api/roles", RoleController.post);
-app.get("/api/roles/:id", RoleController.get);
-app.put("/api/roles/:id", RoleController.put);
-app.delete("/api/roles/:id", RoleController.delete);
+app.route("/api/roles").get(RoleController.getAll).post(RoleController.post);
+
+app
+  .route("/api/roles/:id")
+  .get(RoleController.get)
+  .put(RoleController.put)
+  .delete(RoleController.delete);
 
 // Routes Threads
-app.get("/api/threads", ThreadsController.getAll);
-app.post("/api/threads", ThreadsController.post);
-app.get("/api/threads/:id", ThreadsController.get);
-app.put("/api/threads/:id", ThreadsController.put);
-app.delete("/api/threads/:id", ThreadsController.delete);
+app
+  .route("/api/threads")
+  .get(ThreadsController.getAll)
+  .post(ThreadsController.post);
+
+app
+  .route("/api/threads/:id")
+  .get(ThreadsController.get)
+  .put(ThreadsController.put)
+  .delete(ThreadsController.delete);
 
 // Routes Utilisateurs
 app.get("/api/users", UserController.getAll);
 app.post("/api/users/register", UserController.post);
-app.get("/api/users/:id", UserController.get);
-app.put("/api/users/:id", UserController.put);
-app.delete("/api/users/:id", UserController.delete);
 app.post("/api/users/login", UserController.login);
 app.post("/api/users/ban", UserController.ban);
 app.post("/api/users/unBan", UserController.unBan);
 app.get("/api/users/email/:email", UserController.getByEmail);
 
+app
+  .route("/api/users/:id")
+  .get(UserController.get)
+  .put(UserController.put)
+  .delete(UserController.delete);
+
 // Routes likes
-app.get("/api/likes", likesController.getAll);
-app.post("/api/likes", likesController.post);
-app.get("/api/likes/:id", likesController.get);
-app.put("/api/likes/:id", likesController.put);
-app.delete("/api/likes/:id", likesController.delete);
+app.route("/api/likes").get(likesController.getAll).post(likesController.post);
+
+app
+  .route("/api/likes/:id")
+  .get(likesController.get)
+  .put(likesController.put)
+  .delete(likesController.delete);
+
 app.get("/api/likes/publication/:id", likesController.getByPublication);
 app.get("/api/likes/user/:id", likesController.getByUser);
 
 // Routes UGR
-app.get("/api/UGR", UGRController.getAll);
-app.post("/api/UGR", UGRController.post);
-app.get("/api/UGR/:id", UGRController.get);
-app.put("/api/UGR/:id", UGRController.put);
-app.delete("/UGR/:id", UGRController.delete);
+app.route("/api/UGR").get(UGRController.getAll).post(UGRController.post);
+
+app
+  .route("/api/UGR/:id")
+  .get(UGRController.get)
+  .put(UGRController.put)
+  .delete(UGRController.delete);
 
 // Routes TypeReport
-app.get("/api/TypeReport", TypeReportController.getAll);
-app.post("/api/TypeReport", TypeReportController.post);
-app.get("/api/TypeReport/:id", TypeReportController.get);
-app.put("/api/TypeReport/:id", TypeReportController.put);
-app.delete("/api/TypeReport/:id", TypeReportController.delete);
-app.put("/api/dashboard/update", (req, res) => {
+app
+  .route("/api/TypeReport")
+  .get(TypeReportController.getAll)
+  .post(TypeReportController.post);
+
+app
+  .route("/api/TypeReport/:id")
+  .get(TypeReportController.get)
+  .put(TypeReportController.put)
+  .delete(TypeReportController.delete);
+
+app.put("/api/dashboard/update", async (req, res) => {
+  console.log("Requête PUT reçue à /api/dashboard/update");
+
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
@@ -139,28 +178,37 @@ app.put("/api/dashboard/update", (req, res) => {
       return res.status(403).json({ error: "Token manquant !" });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Token invalide !" });
       }
 
-      const { name } = req.body;
-
-      if (!name) {
-        return res.status(400).json({ error: "Le champ 'name' est requis." });
+      const { username } = req.body;
+      if (!username) {
+        return res
+          .status(400)
+          .json({ error: "Le champ 'username' est requis." });
       }
 
-      // Simulez une mise à jour des données utilisateur
-      const updatedUser = {
-        id: decoded.id,
-        name: name,
-        email: decoded.email,
-      };
+      const userId = decoded.id;
 
-      res.status(200).json(updatedUser);
+      // Utilisation de la méthode update du modèle pour mettre à jour l'username
+      try {
+        const updatedUser = await Model.update("users", "id", userId, {
+          username,
+        });
+
+        if (!updatedUser) {
+          return res.status(404).json({ error: "Utilisateur non trouvé." });
+        }
+
+        res.status(200).json({ id: userId, username: updatedUser.username });
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour :", error);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+      }
     });
   } catch (error) {
-    console.error("Erreur interne :", error.message);
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
 });
@@ -171,26 +219,17 @@ app.get("/api/token/decrypt", (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
-    if (!token) {
-      console.error("Token manquant !");
-      return res.status(403).json({ error: "Token manquant !" });
-    }
-
-    console.log("Token reçu:", token);
+    if (!token) return res.status(403).json({ error: "Token manquant !" });
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        console.error("Erreur de décryptage du token:", err.message);
+      if (err)
         return res
           .status(401)
           .json({ error: "Erreur de décryptage du token ! " + err.message });
-      }
 
-      console.log("Token décodé avec succès:", decoded);
       res.status(200).json({ role: decoded.role, email: decoded.email });
     });
   } catch (error) {
-    console.error("Erreur interne:", error.message);
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
 });
@@ -201,7 +240,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Une erreur interne s'est produite." });
 });
 
+// Lancement du serveur
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Serveur démarré sur le port ${PORT}`));
