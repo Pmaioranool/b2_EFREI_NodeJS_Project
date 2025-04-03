@@ -4,20 +4,41 @@ import { useEffect, useState } from "react";
 export default function Header() {
   const { token, admin } = useContext(UserContext);
 
-const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+export default function Header() {
+  const [token, setToken] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
-const adminToken = async () => {
+  useEffect(() => {
+    const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+    if (storedToken) {
+      setToken(storedToken);
+      fetchUserRole(storedToken);
+    }
+  }, []);
+
+  const fetchUserRole = async (storedToken) => {
     try {
-      const response = await fetch("http://localhost:3000/api/users/getRole", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      const response = await fetch("http://localhost:3000/api/token/decrypt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(token),
+
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user role");
+      }
+
       const data = await response.json();
-      console.log(data);
-      return data.role;
+      setUserRole(data.role); // Assuming the API returns the user's role in `data.role`
     } catch (error) {
-      setMessage({ type: "error", text: error.message });
+      console.error("Error fetching user role:", error.message);
+      setToken(null); // Clear token if there's an error
+      localStorage.removeItem("token");
     }
   };
 

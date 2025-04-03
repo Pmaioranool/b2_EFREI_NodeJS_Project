@@ -44,7 +44,7 @@ class User {
     const token = jwt.sign(
       {
         email: stmt.rows[0].email,
-        role: stmt.rows[0].role,
+        role: stmt.rows[0].role_id,
       },
       process.env.JWT_SECRET,
       {
