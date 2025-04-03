@@ -28,7 +28,13 @@ export default function Header() {
                 </li>
               )}
               <li>
+<<<<<<< HEAD
                 <Link href='/logout'>Déconnexion</Link>
+=======
+                <Link href='/logout' id='logout'>
+                  Déconnexion
+                </Link>
+>>>>>>> 876259d (FIX déconnexion relaod)
               </li>
             </>
           ) : (
