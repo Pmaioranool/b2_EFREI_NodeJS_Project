@@ -1,17 +1,9 @@
-// components/Header.js
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "./userContext";
 
 export default function Header() {
-  const [token, setToken] = useState(null);
-  const [adminToken, setAdminToken] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token"));
-      setAdminToken(localStorage.getItem("admin"));
-    }
-  }, []);
+  const { token, admin } = useContext(UserContext);
 
   return (
     <header id='header'>
@@ -30,15 +22,13 @@ export default function Header() {
 
           {token ? (
             <>
-              {adminToken === "admin" && (
+              {admin === "admin" && (
                 <li>
                   <Link href='/admin'>Admin</Link>
                 </li>
               )}
               <li>
-                <Link href='/logout' id='logout'>
-                  Déconnexion
-                </Link>
+                <Link href='/logout'>Déconnexion</Link>
               </li>
             </>
           ) : (

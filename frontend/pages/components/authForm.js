@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
+import { UserContext } from "./userContext";
 
 export default function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -14,6 +15,7 @@ export default function AuthForm() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
+  const { login } = useContext(UserContext);
   const router = useRouter();
 
   const handleSubmitRegister = async (e) => {
@@ -42,7 +44,7 @@ export default function AuthForm() {
       if (data.message) {
         setMessage({ type: "error", text: data.message });
       } else {
-        localStorage.setItem("token", data.token); // Stockage du token
+        login(data.token, data.admin); // Utilise le contexte
         router.push("/");
       }
     } catch (error) {
@@ -69,7 +71,7 @@ export default function AuthForm() {
       if (data.message) {
         setMessage({ type: "error", text: data.message });
       } else {
-        localStorage.setItem("token", data.token);
+        login(data.token, data.admin); // Utilise le contexte
         router.push("/");
       }
     } catch (error) {

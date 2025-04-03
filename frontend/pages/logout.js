@@ -1,21 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
+import { UserContext } from "./components/userContext";
 
 const Logout = () => {
-    const router = useRouter();
+  const router = useRouter();
+  const { logout } = useContext(UserContext);
 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const token = localStorage.getItem("token");
-            if (token) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("admin");
-                router.push("/");
-            }
-        }
-    }, [router]);
+  useEffect(() => {
+    logout();
+    router.push("/");
+  }, [logout, router]);
 
-    return null; // No UI needed for logout
+  return null;
 };
 
 export default Logout;
