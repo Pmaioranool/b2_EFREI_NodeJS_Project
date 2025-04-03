@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const [Usertoken, setToken] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const [userProfile, setUserProfile] = useState(null); // Stocke les données utilisateur
+  const [editMode, setEditMode] = useState(false); // Active ou désactive le mode édition
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    password: "",
   });
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [error, setError] = useState(null); // Gestion des erreurs
 
+  // Récupération des données utilisateur
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
+    console.log("Token récupéré :", token);
 
     if (token) {
       fetch("http://localhost:3000/api/token/decrypt", {
@@ -32,15 +30,14 @@ const Dashboard = () => {
           return response.json();
         })
         .then((data) => {
+          console.log("Données utilisateur récupérées :", data);
           setUserProfile(data);
-          setFormData({ name: data.name, email: data.email, password: "" });
+          setFormData({ name: data.name }); // Pré-remplit le formulaire avec le nom
         })
         .catch((error) => {
-          const token = localStorage.getItem("token");
-          console.log("Token récupéré :", token);
           console.error("Erreur :", error.message);
           setError("Impossible de charger les informations utilisateur.");
-          //window.location.href = "/login"; // Redirige vers la page de connexion
+          window.location.href = "/login"; // Redirige vers la page de connexion
         })
         .finally(() => setLoading(false));
     } else {
@@ -51,17 +48,20 @@ const Dashboard = () => {
     }
   }, []);
 
+  // Gestion des changements dans le formulaire
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Soumission du formulaire pour mettre à jour le nom
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:3000/dashboard/update", {
+      console.log("Données envoyées :", formData); // Log des données envoyées
+      fetch("http://localhost:3000/api/dashboard/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -70,14 +70,19 @@ const Dashboard = () => {
         body: JSON.stringify(formData),
       })
         .then((response) => {
+          console.log("Statut de la réponse :", response.status); // Log du statut HTTP
           if (!response.ok) {
-            throw new Error("Erreur lors de la mise à jour du profil.");
+            return response.json().then((error) => {
+              console.error("Erreur API :", error); // Log de l'erreur renvoyée par l'API
+              throw new Error(error.message || "Erreur inconnue");
+            });
           }
           return response.json();
         })
         .then((updatedData) => {
+          console.log("Profil mis à jour :", updatedData);
           setUserProfile(updatedData);
-          setEditMode(false);
+          setEditMode(false); // Désactive le mode édition après la mise à jour
         })
         .catch((error) => {
           console.error("Erreur lors de la mise à jour :", error.message);
@@ -99,13 +104,13 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
       {userProfile ? (
         <div>
+          <p>
+            <strong>Nom :</strong> {userProfile.name}
+          </p>{" "}
+          {/* Affiche toujours le nom */}
           {!editMode ? (
             <div>
-              <p>Nom : {userProfile.name}</p>
-              <p>Email : {userProfile.email}</p>
-              <button onClick={() => setEditMode(true)}>
-                Modifier le profil
-              </button>
+              <button onClick={() => setEditMode(true)}>Modifier le nom</button>
             </div>
           ) : (
             <form onSubmit={handleFormSubmit}>
@@ -115,24 +120,6 @@ const Dashboard = () => {
                   type="text"
                   name="name"
                   value={formData.name}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <label>Email :</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <label>Mot de passe :</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
                   onChange={handleInputChange}
                 />
               </div>
