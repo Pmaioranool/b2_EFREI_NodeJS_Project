@@ -167,48 +167,52 @@ app
   .put(TypeReportController.put)
   .delete(TypeReportController.delete);
 
-app.put("/api/dashboard/update", async (req, res) => {
-  console.log("Requête PUT reçue à /api/dashboard/update");
-
+app.post("/api/users/update", async (req, res) => {
   try {
+    const { username, password, birthdate } = req.body;
+
+    // Vérifiez que les champs requis sont présents
+    if (!username || !password || !birthdate) {
+      return res.status(400).json({ error: "Tous les champs sont requis." });
+    }
+
+    // Exemple : Récupérer l'utilisateur connecté via le token
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      return res.status(403).json({ error: "Token manquant !" });
+      return res.status(401).json({ error: "Token manquant ou invalide." });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
-        return res.status(401).json({ error: "Token invalide !" });
+        return res.status(403).json({ error: "Token invalide." });
       }
 
-      const { username } = req.body;
-      if (!username) {
-        return res
-          .status(400)
-          .json({ error: "Le champ 'username' est requis." });
-      }
+      const userId = decoded.id; // Assurez-vous que le token contient l'ID utilisateur
 
-      const userId = decoded.id;
-
-      // Utilisation de la méthode update du modèle pour mettre à jour l'username
+      // Exemple de mise à jour dans la base de données
       try {
-        const updatedUser = await Model.update("users", "id", userId, {
+        const result = await UserController.updateProfile(userId, {
           username,
+          password,
+          birthdate,
         });
 
-        if (!updatedUser) {
-          return res.status(404).json({ error: "Utilisateur non trouvé." });
+        if (result) {
+          res.status(200).json({ message: "Profil mis à jour avec succès." });
+        } else {
+          res
+            .status(500)
+            .json({ error: "Erreur lors de la mise à jour du profil." });
         }
-
-        res.status(200).json({ id: userId, username: updatedUser.username });
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour :", error);
+      } catch (dbError) {
+        console.error(dbError);
         res.status(500).json({ error: "Erreur interne du serveur." });
       }
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
 });

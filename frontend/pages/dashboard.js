@@ -1,111 +1,76 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import withAuth from "./components/withAuth";
 
-const Dashboard = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ username: "" });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+function Dashboard() {
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [birthdate, setBirthdate] = useState("");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      fetch("http://localhost:3000/api/token/decrypt", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => {
-          if (!response.ok)
-            throw new Error(
-              "Erreur lors de la récupération des données utilisateur."
-            );
-          return response.json();
-        })
-        .then((data) => {
-          setUserProfile(data);
-          setFormData({ username: data.username });
-        })
-        .catch(() => {
-          setError("Impossible de charger les informations utilisateur.");
-          window.location.href = "/login";
-        })
-        .finally(() => setLoading(false));
-    } else {
-      window.location.href = "/login";
-    }
-  }, []);
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFormSubmit = (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
-    if (token) {
-      fetch("http://localhost:3000/api/dashboard/update", {
-        method: "PUT",
+    const payload = {
+      username,
+      password,
+      birthdate,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/update", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ajout du token JWT
         },
-        body: JSON.stringify({ username: formData.username }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              "Erreur lors de la mise à jour du nom d'utilisateur."
-            );
-          }
-          return response.json();
-        })
-        .then((updatedData) => {
-          setUserProfile(updatedData);
-          setEditMode(false);
-        })
-        .catch(() => setError("Impossible de mettre à jour le profil."));
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      if (data.message) {
+        setMessage({ type: "error", text: data.message });
+      } else {
+        setMessage({ type: "success", text: "Profil mis à jour avec succès." });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.message });
     }
   };
-
-  if (loading) return <p>Chargement des informations utilisateur...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
   return (
-    <div>
-      <h1>Dashboard</h1>
-      {userProfile ? (
-        <div>
-          <p>
-            <strong>Nom d'utilisateur :</strong> {userProfile.username}
-          </p>
-          {!editMode ? (
-            <button onClick={() => setEditMode(true)}>
-              Modifier le nom d'utilisateur
-            </button>
-          ) : (
-            <form onSubmit={handleFormSubmit}>
-              <input
-                type="text"
-                name="username"
-                value={formData.username || ""}
-                onChange={handleInputChange}
-                required
-              />
-              <button type="submit">Enregistrer</button>
-              <button type="button" onClick={() => setEditMode(false)}>
-                Annuler
-              </button>
-            </form>
-          )}
-        </div>
-      ) : (
-        <p>Aucune information utilisateur trouvée.</p>
-      )}
-    </div>
-  );
-};
+    <section className="admin-container">
+      <form onSubmit={handleUpdateProfile}>
+        <input
+          type="text"
+          placeholder="Nouveau pseudo"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Nouveau mot de passe"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="date"
+          placeholder="Nouvelle date d'anniversaire"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+        />
+        <input
+          type="submit"
+          className="submit"
+          value="Mettre à jour le profil"
+        />
+      </form>
 
-export default withAuth(Dashboard);
+      {message.text && (
+        <p className={message.type === "error" ? "error" : "success"}>
+          {message.text}
+        </p>
+      )}
+    </section>
+  );
+}
+
+export default withAuth(Dashboard, { requireAdmin: false });
