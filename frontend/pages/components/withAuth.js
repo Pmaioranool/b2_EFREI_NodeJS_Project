@@ -8,23 +8,8 @@ export default function withAuth(Component, { requireAdmin = false } = {}) {
     const router = useRouter();
 
     useEffect(() => {
-      if (!token || token === null) {
+      if (!token) {
         console.log("Token not found, redirecting to login");
-        router.replace("/login");
-        return;
-      }
-
-      try {
-        // Décoder le token pour vérifier son expiration
-        const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000; // Temps actuel en secondes
-        if (decodedToken.exp < currentTime) {
-          console.log("Token expired, redirecting to login");
-          router.replace("/login");
-          return;
-        }
-      } catch (err) {
-        console.log("Error decoding token:", err.message);
         router.replace("/login");
         return;
       }
