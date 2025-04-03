@@ -1,6 +1,9 @@
 const Model = require("../models/Models.js");
 const User = require("../models/User.js");
 const Groupes = require("../models/groupes.js");
+const Likes = require("../models/likes.js");
+const Publications = require("../models/publication.js");
+const Comments = require("../models/commentaire.js");
 
 class Controllers {
   static async getAll(model, req, res) {
@@ -65,6 +68,16 @@ const CommentController = {
   post: (req, res) => Controllers.create('comments', req, res),
   put: (req, res) => Controllers.update('comments', 'comment_id', req, res),
   delete: (req, res) => Controllers.delete('comments', 'comment_id', req, res),
+  getByPublication: async (req, res) => {
+    try {
+      const items = await Comments.getByPublication(req.params.id);
+      items
+        ? res.status(200).json(items)
+        : res.status(404).json({ message: "Pas trouvé" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 const GroupController = {
@@ -99,6 +112,16 @@ const PublicationController = {
   post: (req, res) => Controllers.create('publications', req, res),
   put: (req, res) => Controllers.update('publications', 'publication_id', req, res),
   delete: (req, res) => Controllers.delete('publications', 'publication_id', req, res),
+  getByGroup: async (req, res) => {
+    try {
+      const items = await Publications.getByGroup(req.params.id);
+      items
+        ? res.status(200).json(items)
+        : res.status(404).json({ message: "Pas trouvé" });
+    }catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 };
 
 const ReportController = {
@@ -133,7 +156,7 @@ const likesController = {
   delete: (req, res) => Controllers.delete('likes', 'likes_id', req, res),
   getByPublication: async (req,res) => {
     try {
-      const items = await Model.getByPublication(req.params.id);
+      const items = await Likes.getByPublication(req.params.id);
       items
         ? res.status(200).json(items)
         : res.status(404).json({ message: "Pas trouvé" });
@@ -143,7 +166,7 @@ const likesController = {
   },
   getByUser: async (req,res) => {
     try {
-      const items = await Model.getByUser(req.params.id);
+      const items = await Likes.getByUser(req.params.id);
       items
         ? res.status(200).json(items)
         : res.status(404).json({ message: "Pas trouvé" });

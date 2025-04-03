@@ -46,7 +46,8 @@ const Forum = () => {
   useEffect(() => {
     if (selectedGroupe) {
       setLoading(true);
-      fetch(`http://localhost:3000/api/publications?groupId=${selectedGroupe.id}`)
+      console.log(selectedGroupe);
+      fetch(`http://localhost:3000/api/publications/groups/${selectedGroupe.groupe_id}`)
         .then(res => {
           if (!res.ok) throw new Error('Erreur de chargement des publications');
           return res.json();
@@ -60,7 +61,7 @@ const Forum = () => {
   // Charger les commentaires
   const loadComments = (publicationId) => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/comments?publicationId=${publicationId}`)
+    fetch(`http://localhost:3000/api/comments/publication/${publicationId}`)
       .then(res => {
         if (!res.ok) throw new Error('Erreur de chargement des commentaires');
         return res.json();
@@ -119,13 +120,13 @@ const Forum = () => {
               <div key={pub.publication_id} className="publication-card">
                 <h3>{pub.title}</h3>
                 <p>{pub.content}</p>
-                <button 
+                <button
                   onClick={() => loadComments(pub.publication_id)}
                   className="comments-btn"
                 >
                   Voir les commentaires ({comments[pub.publication_id]?.length || 0})
                 </button>
-                
+
                 {comments[pub.publication_id] && (
                   <div className="comments-section">
                     {comments[pub.publication_id].map(comment => (

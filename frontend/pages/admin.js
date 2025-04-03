@@ -27,6 +27,7 @@ function AdminPage() {
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }
+    setBanEmail("");
   };
 
   const handleUnBan = async (e) => {
@@ -49,6 +50,7 @@ function AdminPage() {
     } catch (error) {
       setMessage({ type: "error", text: error.message });
     }
+    setUnBanEmail("");
   };
 
   return (

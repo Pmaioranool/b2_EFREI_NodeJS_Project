@@ -44,6 +44,7 @@ app.post("/api/publications", PublicationController.post);
 app.get("/api/publications/:id", PublicationController.get);
 app.put("/api/publications/:id", PublicationController.put);
 app.delete("/api/publications/:id", PublicationController.delete);
+app.get("/api/publications/groups/:id", PublicationController.getByGroup);
 
 // Routes Categories
 app.get("/api/categories", CategoryController.getAll);
@@ -58,9 +59,9 @@ app.post("/api/comments", CommentController.post);
 app.get("/api/comments/:id", CommentController.get);
 app.put("/api/comments/:id", CommentController.put);
 app.delete("/api/comments/:id", CommentController.delete);
+app.get("/api/comments/publication/:id", CommentController.getByPublication);
 
 // Routes Groupes
-
 app.get("/api/groups", GroupController.getAll);
 app.post("/api/groups", GroupController.post);
 app.get("/api/groups/:id", GroupController.get);

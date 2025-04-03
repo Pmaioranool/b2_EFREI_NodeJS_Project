@@ -117,9 +117,9 @@ create table comments(
     creation_date date not null default now(),
     update_date date not null default now(),
     user_id int not null,
-    groupe_id int not null,
-    foreign key(user_id) references users(user_id),
-    foreign key(groupe_id) references groupes(groupe_id)
+    publication_id int not null,
+    foreign key(publication_id) references publications(publication_id),
+    foreign key(user_id) references users(user_id)
 );
 
 create table likes(
@@ -146,7 +146,7 @@ insert into threads (title, content, user_id, groupe_id) values ('Welcome', 'Wel
 
 insert into publications (title, content, user_id, groupe_id) values ('Welcome', 'Welcome to the forum', 1, 1);
 
-insert into comments (content, user_id, groupe_id) values ('Welcome to the forum', 1, 1);
+insert into comments (content, user_id, publication_id) values ('Welcome to the forum', 1, 1);
 
 insert into likes (user_id, publication_id) values (1, 1);
 
