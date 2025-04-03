@@ -120,6 +120,27 @@ const likesController = {
   post: (req, res) => Controllers.create('likes', req, res),
   put: (req, res) => Controllers.update('likes', 'likes_id', req, res),
   delete: (req, res) => Controllers.delete('likes', 'likes_id', req, res),
+  getByPublication: async (req,res) => {
+    try {
+      const items = await Model.getByPublication(req.params.id);
+      items
+        ? res.status(200).json(items)
+        : res.status(404).json({ message: "Pas trouvé" });
+    }catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  getByUser: async (req,res) => {
+    try {
+      const items = await Model.getByUser(req.params.id);
+      items
+        ? res.status(200).json(items)
+        : res.status(404).json({ message: "Pas trouvé" });
+    }catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
 };
 
 const RoleController = {

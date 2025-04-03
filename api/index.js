@@ -106,6 +106,8 @@ app.post("/api/likes", likesController.post);
 app.get("/api/likes/:id", likesController.get);
 app.put("/api/likes/:id", likesController.put);
 app.delete("/api/likes/:id", likesController.delete);
+app.get("/api/likes/publication/:id", likesController.getByPublication);
+app.get("/api/likes/user/:id", likesController.getByUser);
 
 // Routes UGR
 app.get("/api/UGR", UGRController.getAll);
@@ -121,7 +123,7 @@ app.get("/api/TypeReport/:id", TypeReportController.get);
 app.put("/api/TypeReport/:id", TypeReportController.put);
 app.delete("/api/TypeReport/:id", TypeReportController.delete);
 
-app.post("/api/token/decrypt", (req, res) => {
+app.get("/api/token/decrypt", (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
