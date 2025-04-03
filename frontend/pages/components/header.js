@@ -29,12 +29,18 @@ export default function Header() {
               )}
               <li>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <Link href='/logout'>Déconnexion</Link>
 =======
                 <Link href='/logout' id='logout'>
                   Déconnexion
                 </Link>
 >>>>>>> 876259d (FIX déconnexion relaod)
+=======
+                <Link href='/logout' id='logout'>
+                  Déconnexion
+                </Link>
+>>>>>>> 95bdf27 (refactor: clean up header component by removing unused context and resolving merge conflicts)
               </li>
             </>
           ) : (
@@ -46,4 +52,5 @@ export default function Header() {
       </nav>
     </header>
   );
+
 }
