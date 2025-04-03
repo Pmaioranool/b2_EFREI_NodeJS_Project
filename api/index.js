@@ -66,7 +66,7 @@ app.post("/api/groups", GroupController.post);
 app.get("/api/groups/:id", GroupController.get);
 app.put("/api/groups/:id", GroupController.put);
 app.delete("/api/groups/:id", GroupController.delete);
-app.get("/api/groups/by-category/:id", GroupController.getGroupesByCategory);
+app.get("/api/groups/category/:id", GroupController.getGroupesByCategory);
 
 // Routes Messages Privés (MP)
 app.get("/api/mp", MPController.getAll);
@@ -162,6 +162,8 @@ app.put("/api/dashboard/update", (req, res) => {
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
 });
+
+// Route pour le décryptage du token
 app.get("/api/token/decrypt", (req, res) => {
   try {
     const authHeader = req.headers["authorization"];

@@ -74,20 +74,13 @@ const GroupController = {
   put: (req, res) => Controllers.update('groupes', 'groupe_id', req, res),
   delete: (req, res) => Controllers.delete('groupes', 'groupe_id', req, res),
   getGroupesByCategory: async(req, res) => {
-    // const categoryId = req.query.categories_id;
-  
-    // console.log("Category ID reçu :", categoryId); // Ajoutez ce log pour vérifier la valeur
-  
-    // if (!categoryId) {
-    //   return res.status(400).json({ error: "Le paramètre categories_id est requis." });
-    // }
-  
     try {
-      const groupes = await Groupes.getGroupesByCategory(req.params);
-      res.status(200).json(groupes);
+      const items = await Groupes.getGroupesByCategory(req.params.id);
+      items
+        ? res.status(200).json(items)
+        : res.status(404).json({ message: "Pas trouvé" });
     } catch (error) {
-      console.error("Erreur lors de la récupération des groupes :", error);
-      res.status(500).json({ error: "Erreur interne du serveur." });
+      res.status(500).json({ error: error.message });
     }
   }
 };

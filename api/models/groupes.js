@@ -2,11 +2,7 @@ const { pool } = require("../database/database.js");
 
 class Groupes {
   static async getGroupesByCategory(categoryId) {
-    // console.log("Category ID reçu :", categoryId); // Ajoutez ce log pour vérifier la valeur
-    const query = `
-      SELECT * FROM groupes
-      WHERE category_id = $1
-    `; // Assurez-vous que `category_id` est le bon nom de colonne dans votre table
+    const query = `SELECT * FROM groupes WHERE categories_id = $1`;
 
     try {
       const result = await pool.query(query, [categoryId]); // Utilisation correcte de `pool.query`
