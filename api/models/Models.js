@@ -9,8 +9,8 @@ class Model {
   }
 
   // 🔹 Récupérer une entrée par ID
-  static async getById(model, id) {
-    const sqlQuery = `SELECT * FROM ${model} WHERE id = $1`;
+  static async getById(model,Id, id) {
+    const sqlQuery = `SELECT * FROM ${model} WHERE ${Id} = $1`;
     const stmt = await pool.query(sqlQuery, [id]);
     return stmt.rows[0]; // Retourne un seul résultat
   }
