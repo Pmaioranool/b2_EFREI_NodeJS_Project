@@ -44,9 +44,9 @@ export default function PublicationDetail() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         content: commentContent,
-        user_id: user?.id 
+        user_id: user?.id,
       }),
     })
       .then((res) => {
@@ -54,9 +54,9 @@ export default function PublicationDetail() {
         return res.json();
       })
       .then((newComment) => {
-        setPublication(prev => ({
+        setPublication((prev) => ({
           ...prev,
-          comments: [...prev.comments, newComment]
+          comments: [...prev.comments, newComment],
         }));
         setCommentContent("");
       })
@@ -66,38 +66,50 @@ export default function PublicationDetail() {
       });
   };
 
-  if (loading) return (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-      <p>Chargement en cours...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Chargement en cours...</p>
+      </div>
+    );
 
-  if (error) return (
-    <div className="error-container">
-      <h2>Erreur</h2>
-      <p>{error}</p>
-      <a href="/forum" className="back-button">Retour au forum</a>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="error-container">
+        <h2>Erreur</h2>
+        <p>{error}</p>
+        <a href="/forum" className="back-button">
+          Retour au forum
+        </a>
+      </div>
+    );
 
-  if (!publication) return (
-    <div className="not-found-container">
-      <h2>Publication introuvable</h2>
-      <a href="/forum" className="back-button">Retour au forum</a>
-    </div>
-  );
+  if (!publication)
+    return (
+      <div className="not-found-container">
+        <h2>Publication introuvable</h2>
+        <a href="/forum" className="back-button">
+          Retour au forum
+        </a>
+      </div>
+    );
 
   return (
     <div className="publication-detail">
       <article className="publication-main">
         <h1 className="publication-title">{publication.title}</h1>
-        
+
         <div className="publication-meta">
           <span className="author">Par {user?.username || "Anonyme"}</span>
-          <span className="date">Publié le {new Date(publication.creation_date).toLocaleDateString()}</span>
+          <span className="date">
+            Publié le {new Date(publication.creation_date).toLocaleDateString()}
+          </span>
           {publication.update_date && (
-            <span className="date">Modifié le {new Date(publication.update_date).toLocaleDateString()}</span>
+            <span className="date">
+              Modifié le{" "}
+              {new Date(publication.update_date).toLocaleDateString()}
+            </span>
           )}
         </div>
 
@@ -108,10 +120,10 @@ export default function PublicationDetail() {
 
       <section className="comments-section">
         <h2>Commentaires ({publication.comments?.length || 0})</h2>
-        
+
         {publication.comments?.length > 0 ? (
           <div className="comments-list">
-            {publication.comments.map(comment => (
+            {publication.comments.map((comment) => (
               <div key={comment.id} className="comment">
                 <div className="comment-header">
                   <span className="comment-author">{comment.username}</span>

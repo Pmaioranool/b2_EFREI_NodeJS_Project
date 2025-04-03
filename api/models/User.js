@@ -85,7 +85,7 @@ class User {
       return { token, user };
     } catch (error) {
       console.error("Error logging in user:", error.message);
-      return {message : error.message};
+      return { message: error.message };
     }
   }
 
@@ -100,8 +100,7 @@ class User {
       return stmt.rows[0];
     } catch (error) {
       console.error(`Error fetching user with email ${email}:`, error.message);
-            return {message : error.message};
-
+      return { message: error.message };
     }
   }
 
@@ -118,7 +117,8 @@ class User {
       }
 
       // Update the user's role to "banned"
-      const sqlQuery = "UPDATE users SET role_id = 4 WHERE email = $1 RETURNING *";
+      const sqlQuery =
+        "UPDATE users SET role_id = 4 WHERE email = $1 RETURNING *";
       const parameter = [email];
       const stmt = await pool.query(sqlQuery, parameter);
 
@@ -130,8 +130,7 @@ class User {
       return stmt.rows[0];
     } catch (error) {
       console.error(`Error banning user with email ${email}:`, error.message);
-            return {message : error.message};
-
+      return { message: error.message };
     }
   }
 
@@ -149,7 +148,8 @@ class User {
       }
 
       // Update the user's role to "active"
-      const sqlQuery = "UPDATE users SET role_id = 2 WHERE email = $1 RETURNING *";
+      const sqlQuery =
+        "UPDATE users SET role_id = 2 WHERE email = $1 RETURNING *";
       const parameter = [email];
       const stmt = await pool.query(sqlQuery, parameter);
 
@@ -161,8 +161,7 @@ class User {
       return stmt.rows[0];
     } catch (error) {
       console.error(`Error unbanning user with email ${email}:`, error.message);
-            return {message : error.message};
-
+      return { message: error.message };
     }
   }
 }

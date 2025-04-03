@@ -45,7 +45,10 @@ function AdminPage() {
       if (data.message) {
         setMessage({ type: "error", text: data.message });
       } else {
-        setMessage({ type: "success", text: "Utilisateur débanni avec succès." });
+        setMessage({
+          type: "success",
+          text: "Utilisateur débanni avec succès.",
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -54,31 +57,33 @@ function AdminPage() {
   };
 
   return (
-    <section className='admin-container'>
+    <section className="admin-container">
       <form onSubmit={handleBan}>
         <input
-          type='text'
-          placeholder='Email'
+          type="text"
+          placeholder="Email"
           value={banEmail}
           onChange={(e) => setBanEmail(e.target.value)}
           required
         />
-        <input type='submit' className='submit' value='Ban User' />
+        <input type="submit" className="submit" value="Ban User" />
       </form>
 
       <form onSubmit={handleUnBan}>
         <input
-          type='text'
-          placeholder='Email'
+          type="text"
+          placeholder="Email"
           value={unBanEmail}
           onChange={(e) => setUnBanEmail(e.target.value)}
           required
         />
-        <input type='submit' className='submit' value='UnBan User' />
+        <input type="submit" className="submit" value="UnBan User" />
       </form>
 
       {message.text && (
-        <p className={message.type === "error" ? "error" : "success"}>{message.text}</p>
+        <p className={message.type === "error" ? "error" : "success"}>
+          {message.text}
+        </p>
       )}
     </section>
   );

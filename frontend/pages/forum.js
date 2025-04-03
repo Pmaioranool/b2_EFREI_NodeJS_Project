@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Forum = () => {
   const [categories, setCategories] = useState([]);
@@ -13,13 +13,13 @@ const Forum = () => {
   // Charger les catégories
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:3000/api/categories')
-      .then(res => {
-        if (!res.ok) throw new Error('Erreur de chargement des catégories');
+    fetch("http://localhost:3000/api/categories")
+      .then((res) => {
+        if (!res.ok) throw new Error("Erreur de chargement des catégories");
         return res.json();
       })
-      .then(data => setCategories(data))
-      .catch(err => setError(err.message))
+      .then((data) => setCategories(data))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
@@ -28,16 +28,16 @@ const Forum = () => {
     if (selectedCategory) {
       setLoading(true);
       fetch(`http://localhost:3000/api/groups/category/${selectedCategory.id}`)
-        .then(res => {
-          if (!res.ok) throw new Error('Erreur de chargement des groupes');
+        .then((res) => {
+          if (!res.ok) throw new Error("Erreur de chargement des groupes");
           return res.json();
         })
-        .then(data => {
+        .then((data) => {
           setGroupes(data);
           setSelectedGroupe(null); // Réinitialiser le groupe sélectionné
           setPublications([]); // Vider les publications
         })
-        .catch(err => setError(err.message))
+        .catch((err) => setError(err.message))
         .finally(() => setLoading(false));
     }
   }, [selectedCategory]);
@@ -47,13 +47,15 @@ const Forum = () => {
     if (selectedGroupe) {
       setLoading(true);
       console.log(selectedGroupe);
-      fetch(`http://localhost:3000/api/publications/groups/${selectedGroupe.groupe_id}`)
-        .then(res => {
-          if (!res.ok) throw new Error('Erreur de chargement des publications');
+      fetch(
+        `http://localhost:3000/api/publications/groups/${selectedGroupe.groupe_id}`
+      )
+        .then((res) => {
+          if (!res.ok) throw new Error("Erreur de chargement des publications");
           return res.json();
         })
-        .then(data => setPublications(data))
-        .catch(err => setError(err.message))
+        .then((data) => setPublications(data))
+        .catch((err) => setError(err.message))
         .finally(() => setLoading(false));
     }
   }, [selectedGroupe]);
@@ -62,14 +64,14 @@ const Forum = () => {
   const loadComments = (publicationId) => {
     setLoading(true);
     fetch(`http://localhost:3000/api/comments/publication/${publicationId}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Erreur de chargement des commentaires');
+      .then((res) => {
+        if (!res.ok) throw new Error("Erreur de chargement des commentaires");
         return res.json();
       })
-      .then(data => {
-        setComments(prev => ({ ...prev, [publicationId]: data }));
+      .then((data) => {
+        setComments((prev) => ({ ...prev, [publicationId]: data }));
       })
-      .catch(err => setError(err.message))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   };
 
@@ -80,13 +82,15 @@ const Forum = () => {
       {error && <div className="error-message">{error}</div>}
       {loading && <div className="loading-indicator">Chargement...</div>}
 
+      {/* categories buttons  */}
       <section className="categories-section">
         <h2>Catégories</h2>
         <div className="categories-list">
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <button
               key={cat.id}
-              className={`category-btn ${selectedCategory?.id === cat.id ? 'active' : ''}`}
+              className={`category-btn ${selectedCategory?.id === cat.id ? "active" : ""
+                }`}
               onClick={() => setSelectedCategory(cat)}
             >
               {cat.name}
@@ -95,15 +99,17 @@ const Forum = () => {
         </div>
       </section>
 
+      {/* groups buttons  */}
       {selectedCategory && (
         <section className="groups-section">
           <h2>Groupes dans {selectedCategory.name}</h2>
           <div className="groups-list">
-            {groupes.map(groupe => (
+            {groupes.map((groupe) => (
               <button
                 key={groupe.id}
-                className={`group-btn ${selectedGroupe?.id === groupe.id ? 'active' : ''}`}
-                onClick={() => setSelectedGroupe(groupe)}
+                className={`group-btn ${selectedGroupe?.id === groupe.id ? "active" : ""
+                  }`}
+                onClick={() => [setSelectedGroupe(groupe), setError("")]}
               >
                 {groupe.name}
               </button>
@@ -112,33 +118,42 @@ const Forum = () => {
         </section>
       )}
 
+      {/* publications  */}
       {selectedGroupe && (
         <section className="publications-section">
-          <h2>Publications dans {selectedGroupe.name}</h2>
-          <div className="publications-list">
-            {publications.map(pub => (
-              <div key={pub.publication_id} className="publication-card">
-                <h3>{pub.title}</h3>
-                <p>{pub.content}</p>
-                <button
-                  onClick={() => loadComments(pub.publication_id)}
-                  className="comments-btn"
-                >
-                  Voir les commentaires ({comments[pub.publication_id]?.length || 0})
-                </button>
-
-                {comments[pub.publication_id] && (
-                  <div className="comments-section">
-                    {comments[pub.publication_id].map(comment => (
-                      <div key={comment.id} className="comment">
-                        <strong>{comment.username}:</strong> {comment.content}
+          {publications.length === 0 ? (
+            <div className="error">
+              Aucune publication trouvée dans ce groupe.
+            </div>
+          ) : (
+            <>
+              <h2>Publications dans {selectedGroupe.name}</h2>
+              <div className="publications-list">
+                {publications.map((pub) => (
+                  <div key={pub.publication_id} className="publication-card">
+                    <h3>{pub.title}</h3>
+                    <p>{pub.content}</p>
+                    <button
+                      onClick={() => loadComments(pub.publication_id)}
+                      className="comments-btn"
+                    >
+                      Voir les commentaires
+                    </button>
+                    {comments[pub.publication_id] && (
+                      <div className="comments-section">
+                        {comments[pub.publication_id].map((comment) => (
+                          <div key={comment.id} className="comment">
+                            <strong>{comment.username}:</strong>{" "}
+                            {comment.content}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </section>
       )}
     </div>

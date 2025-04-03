@@ -24,7 +24,9 @@ const Dashboard = () => {
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des données utilisateur.");
+            throw new Error(
+              "Erreur lors de la récupération des données utilisateur."
+            );
           }
           return response.json();
         })
@@ -40,7 +42,9 @@ const Dashboard = () => {
         })
         .finally(() => setLoading(false));
     } else {
-      console.error("Aucun token trouvé. Redirection vers la page de connexion.");
+      console.error(
+        "Aucun token trouvé. Redirection vers la page de connexion."
+      );
       window.location.href = "/login"; // Redirige si aucun token n'est trouvé
     }
   }, []);
@@ -113,10 +117,15 @@ const Dashboard = () => {
             <form onSubmit={handleFormSubmit}>
               <div>
                 <label>Nom :</label>
-                <input type='text' name='name' value={formData.name} onChange={handleInputChange} />
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
               </div>
-              <button type='submit'>Enregistrer</button>
-              <button type='button' onClick={() => setEditMode(false)}>
+              <button type="submit">Enregistrer</button>
+              <button type="button" onClick={() => setEditMode(false)}>
                 Annuler
               </button>
             </form>

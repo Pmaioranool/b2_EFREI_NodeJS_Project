@@ -9,7 +9,7 @@ class Model {
   }
 
   // 🔹 Récupérer une entrée par ID
-  static async getById(model,Id, id) {
+  static async getById(model, Id, id) {
     const sqlQuery = `SELECT * FROM ${model} WHERE ${Id} = $1`;
     const stmt = await pool.query(sqlQuery, [id]);
     return stmt.rows[0]; // Retourne un seul résultat
@@ -21,7 +21,9 @@ class Model {
     const values = Object.values(data);
     const placeholders = keys.map((_, index) => `$${index + 1}`).join(", ");
 
-    const sqlQuery = `INSERT INTO ${model} (${keys.join(", ")}) VALUES (${placeholders}) RETURNING *`;
+    const sqlQuery = `INSERT INTO ${model} (${keys.join(
+      ", "
+    )}) VALUES (${placeholders}) RETURNING *`;
     const stmt = await pool.query(sqlQuery, values);
     return stmt.rows[0];
   }
@@ -30,15 +32,19 @@ class Model {
   static async update(model, Id, id, data) {
     const keys = Object.keys(data);
     const values = Object.values(data);
-    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(", ");
+    const setClause = keys
+      .map((key, index) => `${key} = $${index + 1}`)
+      .join(", ");
 
-    const sqlQuery = `UPDATE ${model} SET ${setClause} WHERE ${Id} = $${keys.length + 1} RETURNING *`;
+    const sqlQuery = `UPDATE ${model} SET ${setClause} WHERE ${Id} = $${
+      keys.length + 1
+    } RETURNING *`;
     const stmt = await pool.query(sqlQuery, [...values, id]);
     return stmt.rows[0];
   }
 
   // 🔹 Supprimer une entrée
-  static async delete(model,Id, id) {
+  static async delete(model, Id, id) {
     const sqlQuery = `DELETE FROM ${model} WHERE ${Id} = $1`;
     await pool.query(sqlQuery, [id]);
     return true;
