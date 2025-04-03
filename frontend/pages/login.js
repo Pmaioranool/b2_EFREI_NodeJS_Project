@@ -84,12 +84,20 @@ export default function AuthForm() {
       <div className="form-container sign-up">
         <form onSubmit={handleSubmitRegister}>
           <h1>Créer un compte</h1>
-          <div className="social-icons">
-            <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-steam"></i></a>
-          </div>
+          {/* <div className="social-icons">
+            <a href="#" className="icon">
+              <i className="fa-brands fa-google-plus-g"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-github"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-steam"></i>
+            </a>
+          </div> */}
           <span>ou utiliser votre email pour créer votre compte</span>
 
           <input
@@ -111,10 +119,12 @@ export default function AuthForm() {
             placeholder="mot de passe"
             value={registerPassword}
             onChange={(e) => setRegisterPassword(e.target.value)}
+
             required
           />
           <input
             type="password"
+
             placeholder="confirmer votre mot de passe"
             value={registerPassword2}
             onChange={(e) => setRegisterPassword2(e.target.value)}
@@ -125,6 +135,7 @@ export default function AuthForm() {
             placeholder="vous êtes né(e) le"
             value={registerBirthdate}
             onChange={(e) => setRegisterBirthdate(e.target.value)}
+
             required
           />
           <input type="submit" className="submit" value="S'enregistrer" />
@@ -134,13 +145,22 @@ export default function AuthForm() {
       {/* Formulaire de connexion */}
       <div className="form-container sign-in">
         <form onSubmit={handleSubmitLogin}>
+
           <h1>Connexion</h1>
-          <div className="social-icons">
-            <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-            <a href="#" className="icon"><i className="fa-brands fa-steam"></i></a>
-          </div>
+          {/* <div className="social-icons">
+            <a href="#" className="icon">
+              <i className="fa-brands fa-google-plus-g"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-github"></i>
+            </a>
+            <a href="#" className="icon">
+              <i className="fa-brands fa-steam"></i>
+            </a>
+          </div> */}
           <span>ou utiliser votre email et mot de passe</span>
 
           <input
@@ -167,12 +187,18 @@ export default function AuthForm() {
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Bon retour parmi nous!</h1>
-            <p>Entrez vos données personnelles pour profiter de toutes les fonctionnalités</p>
+            <p>
+              Entrez vos données personnelles pour profiter de toutes les
+              fonctionnalités
+            </p>
             <button onClick={() => setIsSignUp(false)}>Se connecter</button>
           </div>
           <div className="toggle-panel toggle-right">
             <h1>Bienvenue citoyen!</h1>
-            <p>Enregistrez-vous avec vos données personnelles pour profiter de toutes les fonctionnalités</p>
+            <p>
+              Enregistrez-vous avec vos données personnelles pour profiter de
+              toutes les fonctionnalités
+            </p>
             <button onClick={() => setIsSignUp(true)}>S'enregistrer</button>
           </div>
         </div>
@@ -180,12 +206,13 @@ export default function AuthForm() {
 
       {/* Messages d'erreur ou de succès */}
       {message.text && (
-        <p className={message.type === "error" ? "error" : "success"}>{message.text}</p>
+        <p className={message.type === "error" ? "error" : "success"}>
+          {message.text}
+        </p>
       )}
     </div>
   );
 }
-
 
 /*const token = localStorage.getItem("token");
 
