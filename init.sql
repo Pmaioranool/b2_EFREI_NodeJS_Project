@@ -113,7 +113,6 @@ create table threads(
 
 create table comments(
     comment_id serial primary key,
-    title varchar(255) not null,
     content text not null,
     creation_date date not null default now(),
     update_date date not null default now(),
@@ -147,7 +146,7 @@ insert into threads (title, content, user_id, groupe_id) values ('Welcome', 'Wel
 
 insert into publications (title, content, user_id, groupe_id) values ('Welcome', 'Welcome to the forum', 1, 1);
 
-insert into comments (title, content, user_id, groupe_id) values ('Welcome', 'Welcome to the forum', 1, 1);
+insert into comments (content, user_id, groupe_id) values ('Welcome to the forum', 1, 1);
 
 insert into likes (user_id, publication_id) values (1, 1);
 

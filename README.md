@@ -27,10 +27,10 @@ Ceci est un projet pour la matière NODE.js pour le bachelor 2ème année dével
 
   - HTML5
   - CSS3
-  - PHP 8.2
+  - express
 
 - back-ends
-  - PHP 8.2
+  - express
 
 ## Installation
 
