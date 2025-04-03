@@ -1,9 +1,43 @@
 import Link from "next/link";
-import { useContext } from "react";
-import { UserContext } from "./userContext";
+import { useEffect, useState } from "react";
 
 export default function Header() {
-  const { token, admin } = useContext(UserContext);
+  const [token, setToken] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const storedToken =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+    if (storedToken) {
+      setToken(storedToken);
+      fetchUserRole(storedToken);
+    }
+  }, []);
+
+  const fetchUserRole = async (storedToken) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/token/decrypt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(token),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user role");
+      }
+
+      const data = await response.json();
+      setUserRole(data.role); // Assuming the API returns the user's role in `data.role`
+    } catch (error) {
+      console.error("Error fetching user role:", error.message);
+      setToken(null); // Clear token if there's an error
+      localStorage.removeItem("token");
+    }
+  };
 
   return (
     <header id="header">
@@ -31,9 +65,6 @@ export default function Header() {
                   <Link href="/admin">Admin</Link>
                 </li>
               )}
-              <li>
-                <Link href="/dashboard">Tableau de bord</Link>
-              </li>
               <li>
                 <Link href="/logout">Déconnexion</Link>
               </li>
