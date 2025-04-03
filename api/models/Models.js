@@ -41,7 +41,7 @@ class Model {
   static async delete(model,Id, id) {
     const sqlQuery = `DELETE FROM ${model} WHERE ${Id} = $1`;
     await pool.query(sqlQuery, [id]);
-    return { message: "Suppression réussie" };
+    return true;
   }
 }
 

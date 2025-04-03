@@ -1,5 +1,5 @@
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 // const helmet = require("helmet");
 // const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
@@ -23,12 +23,15 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-// app.use(cors());
+app.use(cors({
+  origin: "*", // ou "*" pour autoriser toutes les origines
+  credentials: true, // si vous gérez des cookies ou des sessions
+}));
 // app.use(helmet());
 // app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 // Message d'accueil
-app.get("/", (req, res) => {
+app.get("/api/", (req, res) => {
   res.send("Bienvenue sur mon API !");
 });
 

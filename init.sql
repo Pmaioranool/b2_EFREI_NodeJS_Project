@@ -1,3 +1,4 @@
+
 drop database if exists forum;
 create database forum;
 

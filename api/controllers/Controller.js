@@ -42,8 +42,8 @@ class Controllers {
 
   static async delete(model,Id, req, res) {
     try {
-      await Model.delete(model,Id, req.params.id);
-      res.status(204).send();
+      const deletedItem = await Model.delete(model,Id, req.params.id);
+      res.status(204).json(deletedItem);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -156,7 +156,7 @@ const UserController = {
       const item = await User.login(req.body);
       item
         ? res.status(200).json(item)
-        : res.status(404).json({ message: "Pas trouvé" });
+        : res.status(404).json({message : "mot de passe ou email incorrect"});
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

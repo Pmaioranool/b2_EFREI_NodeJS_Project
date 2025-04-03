@@ -9,12 +9,24 @@ class User {
     if (isUser) return false;
 
     const hashedPassword = bcrypt.hashSync(password, 10);
-    
+
     const sqlQuery =
       "INSERT INTO users (username, email, password, birthdate, role_id) VALUES ($1, $2, $3, $4, 2);";
     const parameter = [username, email, hashedPassword, birthdate];
     const stmt = await pool.query(sqlQuery, parameter);
-    return stmt.rows[0];
+
+    const token = jwt.sign(
+      {
+        email: email,
+        role: 2,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    return token;
   }
 
   static async login({ email, password }) {
