@@ -1,10 +1,9 @@
-const {pool} = require("../database/database.js");
+const { pool } = require("../database/database.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 class User {
   static async register({ username, email, password, birthdate }) {
-
     const isUser = await this.getUserByEmail(email);
     if (isUser) return false;
 
@@ -62,6 +61,7 @@ class User {
     const stmt = await pool.query(sqlQuery, parameter);
     return stmt.rows[0];
   }
+
 }
 
 module.exports = User;

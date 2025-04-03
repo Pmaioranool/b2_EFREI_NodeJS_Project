@@ -70,7 +70,6 @@ export default function Forum() {
         </div>
       )}
 
-      {/* Overlay pour désactiver le reste de la page */}
       {showPopup && (
         <div
           style={{
