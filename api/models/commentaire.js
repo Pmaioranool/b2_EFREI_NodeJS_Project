@@ -17,7 +17,8 @@ class Comments {
   }
 
   static async getByPublication(id) {
-    const sqlQuery = "select * from Comments where publication_id = $1";
+    const sqlQuery =
+      "select content, username from Comments inner join users on Comments.user_id = users.user_id where publication_id = $1";
     const stmt = await pool.query(sqlQuery, [id]);
     return stmt.rows;
   }

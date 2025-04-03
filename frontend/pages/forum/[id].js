@@ -9,6 +9,7 @@ export default function PublicationDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [commentContent, setCommentContent] = useState("");
+  const [comments, setComments] = useState({});
 
   useEffect(() => {
     if (id) {
@@ -31,6 +32,22 @@ export default function PublicationDetail() {
           console.error("Erreur:", err);
           setError(err.message);
         })
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      fetch(`http://localhost:3000/api/comments/publication/${id}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Erreur de chargement des commentaires");
+          return res.json();
+        })
+        .then((data) => {
+          setComments((prev) => ({ ...prev, [id]: data }));
+        })
+        .catch((err) => setError(err.message))
         .finally(() => setLoading(false));
     }
   }, [id]);
@@ -101,6 +118,7 @@ export default function PublicationDetail() {
         <h1 className="publication-title">{publication.title}</h1>
 
         <div className="publication-meta">
+          <span className="content">{publication.content}</span>
           <span className="author">Par {user?.username || "Anonyme"}</span>
           <span className="date">
             Publié le {new Date(publication.creation_date).toLocaleDateString()}

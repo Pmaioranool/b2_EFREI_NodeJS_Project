@@ -89,8 +89,9 @@ const Forum = () => {
           {categories.map((cat) => (
             <button
               key={cat.id}
-              className={`category-btn ${selectedCategory?.id === cat.id ? "active" : ""
-                }`}
+              className={`category-btn ${
+                selectedCategory?.id === cat.id ? "active" : ""
+              }`}
               onClick={() => setSelectedCategory(cat)}
             >
               {cat.name}
@@ -107,8 +108,9 @@ const Forum = () => {
             {groupes.map((groupe) => (
               <button
                 key={groupe.id}
-                className={`group-btn ${selectedGroupe?.id === groupe.id ? "active" : ""
-                  }`}
+                className={`group-btn ${
+                  selectedGroupe?.id === groupe.id ? "active" : ""
+                }`}
                 onClick={() => [setSelectedGroupe(groupe), setError("")]}
               >
                 {groupe.name}
@@ -131,7 +133,12 @@ const Forum = () => {
               <div className="publications-list">
                 {publications.map((pub) => (
                   <div key={pub.publication_id} className="publication-card">
-                    <h3>{pub.title}</h3>
+                    <a
+                      href={"/forum/" + pub.publication_id}
+                      className="publication-link"
+                    >
+                      <h3>{pub.title}</h3>
+                    </a>
                     <p>{pub.content}</p>
                     <button
                       onClick={() => loadComments(pub.publication_id)}
@@ -139,14 +146,17 @@ const Forum = () => {
                     >
                       Voir les commentaires
                     </button>
+                    {/* Affichage des commentaires */}
                     {comments[pub.publication_id] && (
                       <div className="comments-section">
-                        {comments[pub.publication_id].map((comment) => (
-                          <div key={comment.id} className="comment">
-                            <strong>{comment.username}:</strong>{" "}
-                            {comment.content}
-                          </div>
-                        ))}
+                        {comments[pub.publication_id]
+                          .slice(0, 3)
+                          .map((comment) => (
+                            <div key={comment.id} className="comment">
+                              <strong>{comment.username} :</strong>{" "}
+                              {comment.content}
+                            </div>
+                          ))}
                       </div>
                     )}
                   </div>
