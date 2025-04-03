@@ -106,7 +106,7 @@ class User {
   }
 
   /**
-   * Bans a user by updating their role to "banned" (role_id = 3)
+   * Bans a user by updating their role to "banned" (role_id = 4)
    */
   static async ban(data) {
     try {
@@ -118,7 +118,7 @@ class User {
       }
 
       // Update the user's role to "banned"
-      const sqlQuery = "UPDATE users SET role_id = 3 WHERE email = $1 RETURNING *";
+      const sqlQuery = "UPDATE users SET role_id = 4 WHERE email = $1 RETURNING *";
       const parameter = [email];
       const stmt = await pool.query(sqlQuery, parameter);
 
