@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "./components/userContext";
 
 const Forum = () => {
+  const { email } = useContext(UserContext);
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [groupes, setGroupes] = useState([]);
@@ -10,109 +13,153 @@ const Forum = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ title: "", content: "", groupeId: "" });
+  const [formError, setFormError] = useState("");
+
   // Charger les catégories
   useEffect(() => {
-    setLoading(true);
     fetch("http://localhost:3000/api/categories")
-      .then((res) => {
-        if (!res.ok) throw new Error("Erreur de chargement des catégories");
-        return res.json();
-      })
-      .then((data) => setCategories(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((res) => res.json())
+      .then(setCategories)
+      .catch((err) => setError(err.message));
   }, []);
 
-  // Charger les groupes quand une catégorie est sélectionnée
+  // Charger les groupes
   useEffect(() => {
-    if (selectedCategory) {
-      setLoading(true);
-      fetch(`http://localhost:3000/api/groups/category/${selectedCategory.id}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Erreur de chargement des groupes");
-          return res.json();
-        })
-        .then((data) => {
-          setGroupes(data);
-          setSelectedGroupe(null); // Réinitialiser le groupe sélectionné
-          setPublications([]); // Vider les publications
-        })
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    }
+    if (!selectedCategory) return;
+    fetch(`http://localhost:3000/api/groups/category/${selectedCategory.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGroupes(data);
+        setSelectedGroupe(null);
+        setPublications([]);
+        setFormData((prev) => ({ ...prev, groupeId: data[0]?.groupe_id || "" }));
+      })
+      .catch((err) => setError(err.message));
   }, [selectedCategory]);
 
-  // Charger les publications quand un groupe est sélectionné
+  // Charger les publications du groupe
   useEffect(() => {
-    if (selectedGroupe) {
-      setLoading(true);
-      console.log(selectedGroupe);
-      fetch(
-        `http://localhost:3000/api/publications/groups/${selectedGroupe.groupe_id}`
-      )
-        .then((res) => {
-          if (!res.ok) throw new Error("Erreur de chargement des publications");
-          return res.json();
-        })
-        .then((data) => setPublications(data))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    }
+    if (!selectedGroupe) return;
+    fetch(`http://localhost:3000/api/publications/groups/${selectedGroupe.groupe_id}`)
+      .then((res) => res.json())
+      .then(setPublications)
+      .catch((err) => setError(err.message));
   }, [selectedGroupe]);
 
-  // Charger les commentaires
+  // Charger les commentaires d'une publication
   const loadComments = (publicationId) => {
-    setLoading(true);
     fetch(`http://localhost:3000/api/comments/publication/${publicationId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Erreur de chargement des commentaires");
-        return res.json();
-      })
-      .then((data) => {
-        setComments((prev) => ({ ...prev, [publicationId]: data }));
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((res) => res.json())
+      .then((data) => setComments((prev) => ({ ...prev, [publicationId]: data })))
+      .catch((err) => setError(err.message));
+  };
+
+  // Soumission du formulaire
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) return setFormError("Vous devez être connecté.");
+
+    try {
+      const resUser = await fetch(`http://localhost:3000/api/users/email/${email}`);
+      const user = await resUser.json();
+
+      const res = await fetch("http://localhost:3000/api/publications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title,
+          content: formData.content,
+          user_id: user.user_id,
+          groupe_id: formData.groupeId,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erreur lors de l'envoi");
+
+      const newPub = await res.json();
+      if (selectedGroupe?.groupe_id === newPub.groupe_id) {
+        setPublications((prev) => [newPub, ...prev]);
+      }
+
+      setShowForm(false);
+      setFormData({ title: "", content: "", groupeId: groupes[0]?.groupe_id || "" });
+    } catch (err) {
+      console.error(err);
+      setFormError(err.message);
+    }
   };
 
   return (
-    <div className="forum-container">
+    <div className='forum-container'>
       <h1>Forum Communautaire</h1>
 
-      {error && <div className="error-message">{error}</div>}
-      {loading && <div className="loading-indicator">Chargement...</div>}
-
-      {/* categories buttons  */}
-      <section className="categories-section">
+      {/* Catégories */}
+      <section className='categories-section'>
         <h2>Catégories</h2>
-        <div className="categories-list">
+        <div className='categories-list'>
           {categories.map((cat) => (
             <button
               key={cat.id}
-              className={`category-btn ${
-                selectedCategory?.id === cat.id ? "active" : ""
-              }`}
-              onClick={() => setSelectedCategory(cat)}
-            >
+              className={`category-btn ${selectedCategory?.id === cat.id ? "active" : ""}`}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setShowForm(false);
+              }}>
               {cat.name}
             </button>
           ))}
         </div>
+
+        {selectedCategory && (
+          <button className='forum-btn' onClick={() => setShowForm(!showForm)}>
+            {showForm ? "Annuler" : "Ajouter une publication"}
+          </button>
+        )}
       </section>
 
-      {/* groups buttons  */}
+      {/* Formulaire */}
+      {showForm && (
+        <form className='ajout-pub' onSubmit={handleSubmit}>
+          <input
+            type='text'
+            placeholder='Titre'
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            required
+          />
+          <textarea
+            placeholder='Contenu'
+            value={formData.content}
+            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            required
+          />
+          <select
+            value={formData.groupeId}
+            onChange={(e) => setFormData({ ...formData, groupeId: e.target.value })}
+            required>
+            {groupes.map((g) => (
+              <option key={g.groupe_id} value={g.groupe_id}>
+                {g.name}
+              </option>
+            ))}
+          </select>
+          <input type='submit' className='submit' value='Publier' />
+          {formError && <p className='error'>{formError}</p>}
+        </form>
+      )}
+
+      {/* Groupes */}
       {selectedCategory && (
-        <section className="groups-section">
+        <section className='groups-section'>
           <h2>Groupes dans {selectedCategory.name}</h2>
-          <div className="groups-list">
+          <div className='groups-list'>
             {groupes.map((groupe) => (
               <button
                 key={groupe.id}
-                className={`group-btn ${
-                  selectedGroupe?.id === groupe.id ? "active" : ""
-                }`}
-                onClick={() => [setSelectedGroupe(groupe), setError("")]}
-              >
+                className={`group-btn ${selectedGroupe?.id === groupe.id ? "active" : ""}`}
+                onClick={() => [setSelectedGroupe(groupe), setError("")]}>
                 {groupe.name}
               </button>
             ))}
@@ -120,49 +167,33 @@ const Forum = () => {
         </section>
       )}
 
-      {/* publications  */}
+      {/* Publications */}
       {selectedGroupe && (
-        <section className="publications-section">
+        <section className='publications-section'>
+          <h2>Publications dans {selectedGroupe.name}</h2>
           {publications.length === 0 ? (
-            <div className="error">
-              Aucune publication trouvée dans ce groupe.
-            </div>
+            <p>Aucune publication</p>
           ) : (
-            <>
-              <h2>Publications dans {selectedGroupe.name}</h2>
-              <div className="publications-list">
-                {publications.map((pub) => (
-                  <div key={pub.publication_id} className="publication-card">
-                    <a
-                      href={"/forum/" + pub.publication_id}
-                      className="publication-link"
-                    >
-                      <h3>{pub.title}</h3>
-                    </a>
-                    <p>{pub.content}</p>
-                    <button
-                      onClick={() => loadComments(pub.publication_id)}
-                      className="comments-btn"
-                    >
-                      Voir les commentaires
-                    </button>
-                    {/* Affichage des commentaires */}
-                    {comments[pub.publication_id] && (
-                      <div className="comments-section">
-                        {comments[pub.publication_id]
-                          .slice(0, 3)
-                          .map((comment) => (
-                            <div key={comment.id} className="comment">
-                              <strong>{comment.username} :</strong>{" "}
-                              {comment.content}
-                            </div>
-                          ))}
+            publications.map((pub) => (
+              <div key={pub.publication_id} className='publication-card'>
+                <a href={`/forum/${pub.publication_id}`}>
+                  <h3>{pub.title}</h3>
+                </a>
+                <p>{pub.content}</p>
+                <button onClick={() => loadComments(pub.publication_id)} className='comments-btn'>
+                  Voir les commentaires
+                </button>
+                {comments[pub.publication_id] && (
+                  <div className='comments-section'>
+                    {comments[pub.publication_id].slice(0, 3).map((comment) => (
+                      <div key={comment.id} className='comment'>
+                        <strong>{comment.username}</strong> : {comment.content}
                       </div>
-                    )}
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            </>
+            ))
           )}
         </section>
       )}
