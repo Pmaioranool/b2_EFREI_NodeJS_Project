@@ -1,25 +1,88 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-  useEffect(() => {
-    const container = document.getElementById("container");
-    if (container) {
-      if (isSignUp) {
-        container.classList.add("active");
-      } else {
-        container.classList.remove("active");
-      }
+  // États pour le formulaire d'inscription
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerPassword2, setRegisterPassword2] = useState("");
+  const [registerBirthdate, setRegisterBirthdate] = useState("");
+
+  // États pour le formulaire de connexion
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  const router = useRouter();
+
+  const handleSubmitRegister = async (e) => {
+    e.preventDefault();
+    if (registerPassword !== registerPassword2) {
+      setMessage({ type: "error", text: "Les mots de passe ne correspondent pas" });
+      return;
     }
-  }, [isSignUp]); // Met à jour l'affichage quand isSignUp change
+
+    // Prépare les données à envoyer sous forme de JSON
+    const payload = {
+      email: registerEmail,
+      username: registerUsername,
+      password: registerPassword,
+      password2: registerPassword2,
+      birthdate: registerBirthdate,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!data.message) {
+        localStorage.setItem('token', JSON.stringify(token));
+        // console.log(data);
+        router.push("/");
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.message });
+    }
+  };
+
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      email: loginEmail,
+      password: loginPassword,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      setMessage(data);
+
+      if (!data.message) {
+        localStorage.setItem('token', JSON.stringify(data));
+        // console.log(data);
+        router.push("/");
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.message });
+    }
+  };
 
   return (
-    <div className="container" id="container">
+    <div className={`container ${isSignUp ? "active" : ""}`} id="container">
       {/* Formulaire d'inscription */}
       <div className="form-container sign-up">
-        <form action="/log" method="post">
+        <form onSubmit={handleSubmitRegister}>
           <h1>Créer un compte</h1>
           {/* <div className="social-icons">
             <a href="#" className="icon">
@@ -36,19 +99,43 @@ export default function AuthForm() {
             </a>
           </div> */}
           <span>ou utiliser votre email pour créer votre compte</span>
-          <input type="hidden" name="register" value="register" />
-          <input type="email" name="email" placeholder="email" required />
-          <input type="text" name="name" placeholder="nom" required />
+
           <input
-            type="password"
-            name="password"
-            placeholder="mot de passe"
+            type="email"
+            placeholder="email"
+            value={registerEmail}
+            onChange={(e) => setRegisterEmail(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="username"
+            value={registerUsername}
+            onChange={(e) => setRegisterUsername(e.target.value)}
             required
           />
           <input
             type="password"
-            name="password2"
+            placeholder="mot de passe"
+            value={registerPassword}
+            onChange={(e) => setRegisterPassword(e.target.value)}
+
+            required
+          />
+          <input
+            type="password"
+
             placeholder="confirmer votre mot de passe"
+            value={registerPassword2}
+            onChange={(e) => setRegisterPassword2(e.target.value)}
+            required
+          />
+          <input
+            type="date"
+            placeholder="vous êtes né(e) le"
+            value={registerBirthdate}
+            onChange={(e) => setRegisterBirthdate(e.target.value)}
+
             required
           />
           <input type="submit" className="submit" value="S'enregistrer" />
@@ -57,7 +144,8 @@ export default function AuthForm() {
 
       {/* Formulaire de connexion */}
       <div className="form-container sign-in">
-        <form action="/" method="post">
+        <form onSubmit={handleSubmitLogin}>
+
           <h1>Connexion</h1>
           {/* <div className="social-icons">
             <a href="#" className="icon">
@@ -74,12 +162,19 @@ export default function AuthForm() {
             </a>
           </div> */}
           <span>ou utiliser votre email et mot de passe</span>
-          <input type="hidden" name="register" value="login" />
-          <input type="email" name="email" placeholder="email" required />
+
+          <input
+            type="email"
+            placeholder="email"
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
+            required
+          />
           <input
             type="password"
-            name="password"
             placeholder="mot de passe"
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
             required
           />
           <a href="#">Mot de passe oublié?</a>
@@ -118,3 +213,18 @@ export default function AuthForm() {
     </div>
   );
 }
+
+/*const token = localStorage.getItem("token");
+
+fetch("http://localhost:3000/api/some-protected-route", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,  // <-- On envoie le token ici
+  },
+})
+  .then((res) => res.json())
+  .then((data) => {
+    console.log(data);
+  });
+*/
