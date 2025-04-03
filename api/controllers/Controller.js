@@ -196,6 +196,26 @@ const UserController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  },
+  ban: (req, res) => {
+    try {
+      const item = User.ban(req.body);
+      item
+      ? res.status(200).json(item)
+      : res.status(404).json({ message: "Pas trouvé" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  unBan: (req, res) => {
+    try {
+      const item = User.unBan(req.body);
+      item
+        ? res.status(200).json(item)
+        : res.status(404).json({ message: "Pas trouvé" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 

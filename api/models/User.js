@@ -62,6 +62,20 @@ class User {
     return stmt.rows[0];
   }
 
+  static async ban(email) {
+    const sqlQuery = "UPDATE users SET role_id = 3 WHERE email = $1 RETURNING *";
+    const parameter = [email];
+    const stmt = await pool.query(sqlQuery, parameter);
+    return stmt.rows[0];
+  }
+
+  static async unBan(email) {
+    const sqlQuery = "UPDATE users SET role_id = 2 WHERE email = $1 RETURNING *";
+    const parameter = [email];
+    const stmt = await pool.query(sqlQuery, parameter);
+    return stmt.rows[0];
+  }
+
 }
 
 module.exports = User;
