@@ -44,7 +44,6 @@ export function UserProvider({ children }) {
       const data = await response.json();
       if (data && data.role) {
         setRole(data.role);
-        localStorage.setItem("role", data.role);
       }
     } catch (error) {
       console.error("Erreur lors de la récupération du rôle :", error);
@@ -53,7 +52,6 @@ export function UserProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("role");
     setToken(null);
     setRole(null);
   };
