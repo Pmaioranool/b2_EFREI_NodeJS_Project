@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
+
 export default function Header() {
   const [token, setToken] = useState(null);
   const [adminToken, setAdminToken] = useState(null);
@@ -12,6 +14,7 @@ export default function Header() {
       setAdminToken(localStorage.getItem("admin"));
     }
   }, []);
+
 
   return (
     <header id='header'>
@@ -36,7 +39,12 @@ export default function Header() {
                 </li>
               )}
               <li>
-                <Link href='/logout' id='logout'>
+
+                <Link href="/dashboard">Dashboard</Link>
+              </li>
+              <li>
+                <Link href="/logout" id="logout">
+
                   Déconnexion
                 </Link>
               </li>
