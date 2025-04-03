@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 // const helmet = require("helmet");
 // const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
@@ -119,6 +120,33 @@ app.post("/api/TypeReport", TypeReportController.post);
 app.get("/api/TypeReport/:id", TypeReportController.get);
 app.put("/api/TypeReport/:id", TypeReportController.put);
 app.delete("/api/TypeReport/:id", TypeReportController.delete);
+
+app.post("/api/token/decrypt", (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      console.error("Token manquant !");
+      return res.status(403).json({ error: "Token manquant !" });
+    }
+
+    console.log("Token reçu:", token);
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        console.error("Erreur de décryptage du token:", err.message);
+        return res.status(401).json({ error: "Erreur de décryptage du token ! "+ err.message });
+      }
+
+      console.log("Token décodé avec succès:", decoded);
+      res.status(200).json({ role: decoded.role, email: decoded.email });
+    });
+  } catch (error) {
+    console.error("Erreur interne:", error.message);
+    res.status(500).json({ error: "Une erreur interne s'est produite." });
+  }
+});
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {

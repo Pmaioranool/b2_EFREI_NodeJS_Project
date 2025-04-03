@@ -45,7 +45,7 @@ class User {
     const token = jwt.sign(
       {
         email: stmt.rows[0].email,
-        role: stmt.rows[0].role,
+        role: stmt.rows[0].role_id,
       },
       process.env.JWT_SECRET,
       {
@@ -61,18 +61,6 @@ class User {
     const parameter = [email];
     const stmt = await pool.query(sqlQuery, parameter);
     return stmt.rows[0];
-  }
-
-  static async getUser(){
-    const sqlQuery = "SELECT * FROM users";
-    const stmt = await pool.query(sqlQuery);
-    return stmt.rows;
-  }
-
-  static async dellUser(id){
-    const sqlQuery = "DELETE FROM users WHERE id = $1";
-    const stmt = await pool.query(sqlQuery, [id]);
-    return stmt.rows;
   }
 }
 
