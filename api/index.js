@@ -57,12 +57,15 @@ app.get("/api/comments/:id", CommentController.get);
 app.put("/api/comments/:id", CommentController.put);
 app.delete("/api/comments/:id", CommentController.delete);
 
-// Routes Groupes
+// Routes Groupes 
+
+
 app.get("/api/groups", GroupController.getAll);
 app.post("/api/groups", GroupController.post);
 app.get("/api/groups/:id", GroupController.get);
 app.put("/api/groups/:id", GroupController.put);
 app.delete("/api/groups/:id", GroupController.delete);
+app.get("/api/groups/by-category", GroupController.getGroupesByCategory);
 
 // Routes Messages Privés (MP)
 app.get("/api/mp", MPController.getAll);

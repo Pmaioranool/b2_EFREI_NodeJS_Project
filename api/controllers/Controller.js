@@ -72,6 +72,21 @@ const GroupController = {
   post: (req, res) => Controllers.create('groupes', req, res),
   put: (req, res) => Controllers.update('groupes', 'groupe_id', req, res),
   delete: (req, res) => Controllers.delete('groupes', 'groupe_id', req, res),
+  async getGroupesByCategory(req, res) {
+    const categoryId = req.query.categories_id; // Récupère l'ID de la catégorie depuis les paramètres de requête
+
+    if (!categoryId) {
+      return res.status(400).json({ error: "Le paramètre categories_id est requis." });
+    }
+
+    try {
+      const groupes = await Groupes.getGroupesByCategory(categoryId);
+      res.status(200).json(groupes);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des groupes :", error);
+      res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+  },
 };
 
 const MPController = {

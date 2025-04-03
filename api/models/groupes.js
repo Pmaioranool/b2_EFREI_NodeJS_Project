@@ -15,6 +15,12 @@ class Groupes {
         return stmt.rows;
     }
 
+    static async getGroupesByCategory(categoryId) {
+        const sqlQuery = "SELECT * FROM groupes WHERE categories_id = $1";
+        const stmt = await pool.query(sqlQuery, [categoryId]);
+        return stmt.rows;
+    }
+
     static async createGroupe(name){
         const sqlQuery = "insert into Groupes (name) values ($1)";
         const stmt = await pool.query(sqlQuery, [name]);
