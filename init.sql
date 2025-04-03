@@ -130,7 +130,7 @@ create table likes(
     foreign key(publication_id) references publications(publication_id)
 );
 
-insert into roles (name) values ('admin'), ('user'), ('moderator');
+insert into roles (name) values ('admin'), ('user'), ('moderator'), ('banni');
 
 insert into categories (name, parent) values ('General', null), ('Programming', null), ('Web', 2), ('Mobile', 2), ('Desktop', 2), ('Game', 2), ('Other', 2);
 
