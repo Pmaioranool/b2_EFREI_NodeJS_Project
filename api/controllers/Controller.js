@@ -197,9 +197,10 @@ const UserController = {
       res.status(500).json({ error: error.message });
     }
   },
-  ban: (req, res) => {
+  ban: async (req, res) => {
     try {
-      const item = User.ban(req.body);
+      const item = await User.ban(req.body);
+      console.log(item);
       item
       ? res.status(200).json(item)
       : res.status(404).json({ message: "Pas trouvé" });
@@ -207,9 +208,9 @@ const UserController = {
       res.status(500).json({ error: error.message });
     }
   },
-  unBan: (req, res) => {
+  unBan: async (req, res) => {
     try {
-      const item = User.unBan(req.body);
+      const item = await User.unBan(req.body);
       item
         ? res.status(200).json(item)
         : res.status(404).json({ message: "Pas trouvé" });
