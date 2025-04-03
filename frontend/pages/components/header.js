@@ -2,9 +2,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Header() {
-  const { token, admin } = useContext(UserContext);
-
-export default function Header() {
   const [token, setToken] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
@@ -65,13 +62,9 @@ export default function Header() {
                 </li>
               )}
               <li>
-<<<<<<< HEAD
                 <Link href='/logout' id='logout'>
                   Déconnexion
                 </Link>
-=======
-                <Link href='/logout'>Déconnexion</Link>
->>>>>>> 50d903ee62af31e604783682ab953d081037bba6
               </li>
             </>
           ) : (
@@ -83,4 +76,5 @@ export default function Header() {
       </nav>
     </header>
   );
+
 }
