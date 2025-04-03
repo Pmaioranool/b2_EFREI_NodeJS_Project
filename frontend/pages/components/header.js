@@ -1,6 +1,9 @@
 // components/Header.js
 import Link from "next/link";
 
+const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+const adminToken = typeof window !== "undefined" ? localStorage.getItem("admin") : null;
+
 export default function Header({ user, userRole }) {
   return (
     <header id="header">
@@ -17,13 +20,13 @@ export default function Header({ user, userRole }) {
           <li>
             <Link href="/">Accueil</Link>
           </li>
-          
+
           <li>
             <Link href="/forum">Forums</Link>
           </li>
-          {user ? (
+          {token ? (
             <>
-              {userRole === "admin" && (
+              {adminToken === "admin" && (
                 <li>
                   <Link href="/admin">Admin</Link>
                 </li>

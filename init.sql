@@ -131,7 +131,7 @@ create table likes(
     foreign key(publication_id) references publications(publication_id)
 );
 
-insert into roles (name) values ('admin'), ('user'), ('moderator');
+insert into roles (name) values ('admin'), ('user'), ('moderator'), ('ban');
 
 insert into categories (name, parent) values ('General', null), ('Programming', null), ('Web', 2), ('Mobile', 2), ('Desktop', 2), ('Game', 2), ('Other', 2);
 
@@ -139,7 +139,7 @@ insert into type_report (name) values ('Spam'), ('Violence'), ('Hate speech'), (
 
 insert into groupes (name, rules, categories_id) values ('General', 'No rules', 1), ('Programming', 'No rules', 2), ('Web', 'No rules', 3), ('Mobile', 'No rules', 4), ('Desktop', 'No rules', 5), ('Game', 'No rules', 6), ('Other', 'No rules', 7);
 
-insert into users (username, email, password, birthdate, gender, bio, avatar, role_id) values ('admin', 'admin@admin', 'admin', '2000-05-05', 'admin', 'THE ADMIN', null, 1);
+insert into users (username, email, password, birthdate, gender, bio, avatar, role_id) values ('admin', 'admin@admin', '$2b$10$H2EYxOiiHEsVT7pwm18fqOn1xMk8VX.qLBuPi.4IuVt.z4ipbE3My', '2000-05-05', 'admin', 'THE ADMIN', null, 1);--password = admin
 
 insert into users_groupes_roles (user_id, groupe_id, role_id) values (1, 1, 1);
 
