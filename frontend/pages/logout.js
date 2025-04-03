@@ -2,20 +2,16 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 const Logout = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const token = localStorage.getItem("token");
-            if (token) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("admin");
-                router.push("/");
-            }
-        }
-    }, [router]);
+  useEffect(() => {
+    // Remove the token from localStorage
+    localStorage.removeItem("token");
+    // Redirect to the login page
+    router.push("/login");
+  }, [router]);
 
-    return null; // No UI needed for logout
+  return null; // Optionally, you can return a loading message or spinner
 };
 
 export default Logout;

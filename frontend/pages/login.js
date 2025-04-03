@@ -41,9 +41,9 @@ export default function AuthForm() {
         body: JSON.stringify(payload),
       });
       const data = await response.json();
+      console.log(data);
       if (!data.message) {
         localStorage.setItem('token', JSON.stringify(token));
-        // console.log(data);
         router.push("/");
       }
     } catch (error) {
