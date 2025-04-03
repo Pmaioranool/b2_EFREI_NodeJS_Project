@@ -1,19 +1,8 @@
-// components/Header.js
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
-
 export default function Header() {
-  const [token, setToken] = useState(null);
-  const [adminToken, setAdminToken] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token"));
-      setAdminToken(localStorage.getItem("admin"));
-    }
-  }, []);
+  const { token, admin } = useContext(UserContext);
 
 const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -49,18 +38,13 @@ const adminToken = async () => {
 
           {token ? (
             <>
-              {adminToken === "admin" && (
+              {admin === "admin" && (
                 <li>
                   <Link href='/admin'>Admin</Link>
                 </li>
               )}
               <li>
-
-                <Link href="/dashboard">Dashboard</Link>
-              </li>
-              <li>
-                <Link href="/logout" id="logout">
-
+                <Link href='/logout' id='logout'>
                   Déconnexion
                 </Link>
               </li>

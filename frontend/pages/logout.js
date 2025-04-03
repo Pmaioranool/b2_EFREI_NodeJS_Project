@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
+import { UserContext } from "./components/userContext";
 
 const Logout = () => {
   const router = useRouter();
