@@ -44,7 +44,7 @@ class User {
     const token = jwt.sign(
       {
         email: stmt.rows[0].email,
-        role: stmt.rows[0].role,
+        role: stmt.rows[0].role_id,
       },
       process.env.JWT_SECRET,
       {
@@ -62,40 +62,6 @@ class User {
     return stmt.rows[0];
   }
 
-  static async getUser() {
-    const sqlQuery = "SELECT * FROM users";
-    const stmt = await pool.query(sqlQuery);
-    return stmt.rows;
-  }
-
-  static async updateUserName() {
-    const sqlQuery = "UPDATE users SET username = $1 WHERE id = $2";
-    const parameter = [username, id];
-    return stmt.rows[0];
-  }
-
-  static async updateUserEmail() {
-    const sqlQuery = "UPDATE users SET email = $1 WHERE id = $2";
-    const parameter = [email, id];
-    return stmt.rows[0];
-  }
-
-  // TODO: Gérer le changement de mot de passe, il faut supprimer l'ancien mot de passe et en créer un nouveau hashé
-  static async updateUserPassword() {
-    const sqlQuery = "UPDATE users SET password = $1 WHERE id = $2";
-    const parameter = [password, id];
-    return stmt.rows[0];
-  }
-  static async updateUserBirthdate() {
-    const sqlQuery = "UPDATE users SET birthdate = $1 WHERE id = $2";
-    const parameter = [birthdate, id];
-    return stmt.rows[0];
-  }
-  static async dellUser(id) {
-    const sqlQuery = "DELETE FROM users WHERE id = $1";
-    const stmt = await pool.query(sqlQuery, [id]);
-    return stmt.rows;
-  }
 }
 
 module.exports = User;

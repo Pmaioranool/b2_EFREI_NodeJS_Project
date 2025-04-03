@@ -5,23 +5,6 @@ import { UserContext } from "./userContext";
 export default function Header() {
   const { token, admin } = useContext(UserContext);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-  const adminToken = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/users/getRole", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      console.log(data);
-      return data.role;
-    } catch (error) {
-      setMessage({ type: "error", text: error.message });
-    }
-  };
-
   return (
     <header id='header'>
       <Link href='/'>
@@ -45,12 +28,7 @@ export default function Header() {
                 </li>
               )}
               <li>
-                <Link href='/dashboard'>Dashboard</Link>
-              </li>
-              <li>
-                <Link href='/logout' id='logout'>
-                  Déconnexion
-                </Link>
+                <Link href='/logout'>Déconnexion</Link>
               </li>
             </>
           ) : (
