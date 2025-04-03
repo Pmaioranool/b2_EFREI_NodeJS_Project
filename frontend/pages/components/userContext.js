@@ -6,6 +6,7 @@ export const UserContext = createContext();
 export function UserProvider({ children }) {
   const [token, setToken] = useState(null);
   const [role, setRole] = useState(null);
+  const [email, setEmail] = useState(null);
   const router = useRouter();
 
   // Lire le token et le rôle à chaque navigation
@@ -45,6 +46,9 @@ export function UserProvider({ children }) {
       if (data && data.role) {
         setRole(data.role);
       }
+      if (data && data.email) {
+        setEmail(data.email);
+      }
     } catch (error) {
       console.error("Erreur lors de la récupération du rôle :", error);
     }
@@ -57,6 +61,8 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ token, role, login, logout }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ token, role, email, login, logout }}>
+      {children}
+    </UserContext.Provider>
   );
 }

@@ -106,6 +106,7 @@ app.delete("/api/users/:id", UserController.delete);
 app.post("/api/users/login", UserController.login);
 app.post("/api/users/ban", UserController.ban);
 app.post("/api/users/unBan", UserController.unBan);
+app.get("/api/users/email/:email", UserController.getByEmail);
 
 // Routes likes
 app.get("/api/likes", likesController.getAll);

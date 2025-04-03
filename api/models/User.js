@@ -164,6 +164,20 @@ class User {
       return { message: error.message };
     }
   }
+
+  static async getByEmail(email) {
+    try {
+      const sqlQuery = "SELECT user_id FROM users WHERE email = $1";
+      const stmt = await pool.query(sqlQuery, [email]);
+      if (!stmt.rows.length) {
+        throw new Error("User not found");
+      }
+      return stmt.rows[0];
+    } catch (error) {
+      console.error(`Error fetching user with email ${email}:`, error.message);
+      return { message: error.message };
+    }
+  }
 }
 
 module.exports = User;

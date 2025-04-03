@@ -251,6 +251,16 @@ const UserController = {
       res.status(500).json({ error: error.message });
     }
   },
+  getByEmail: async (req, res) => {
+    try {
+      const item = await User.getByEmail(req.params.email);
+      item
+        ? res.status(200).json(item)
+        : res.status(404).json({ message: "Pas trouvé" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = {
