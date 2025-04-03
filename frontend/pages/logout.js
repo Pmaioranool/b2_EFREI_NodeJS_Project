@@ -4,15 +4,23 @@ import { UserContext } from "./components/userContext";
 
 const Logout = () => {
   const router = useRouter();
+  const { logout } = useContext(UserContext);
 
   useEffect(() => {
-    // Remove the token from localStorage
-    localStorage.removeItem("token");
-    // Redirect to the login page
-    router.push("/login");
-  }, [router]);
+    logout();
+    router.push("/");
+  }, [logout, router]);
 
-  return null; // Optionally, you can return a loading message or spinner
+  return null;
+
+  //   useEffect(() => {
+  //     // Remove the token from localStorage
+  //     localStorage.removeItem("token");
+  //     // Redirect to the login page
+  //     router.push("/login");
+  //   }, [router]);
+
+  //   return null; // Optionally, you can return a loading message or spinner
 };
 
 export default Logout;
