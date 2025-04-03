@@ -28,13 +28,13 @@ const Forum = () => {
     if (selectedCategory) {
       setLoading(true);
       fetch(`http://localhost:3000/api/groups/by-category?categories_id=${selectedCategory.id}`)
-    .then(res => {
-        if (!res.ok) throw new Error('Erreur lors du chargement des groupes');
-        return res.json();
-    })
-    .then(data => setGroupes(data))
-    .catch(err => setError(err.message))
-    .finally(() => setLoading(false));
+        .then(res => {
+          if (!res.ok) throw new Error('Erreur lors du chargement des groupes');
+          return res.json();
+        })
+        .then(data => setGroupes(data))
+        .catch(err => setError(err.message))
+        .finally(() => setLoading(false));
     }
   }, [selectedCategory]);
 
@@ -42,7 +42,7 @@ const Forum = () => {
   useEffect(() => {
     if (selectedGroupe) {
       setLoading(true);
-      fetch(`http://localhost:3000//api/publications?groupId=${selectedGroupe.id}`)
+      fetch(`http://localhost:3000/api/publications?groupId=${selectedGroupe.id}`) // Fixed URL
         .then(res => {
           if (!res.ok) throw new Error('Erreur lors du chargement des publications');
           return res.json();
@@ -56,7 +56,7 @@ const Forum = () => {
   // Fonction pour charger les commentaires d'une publication donnée
   const loadComments = (publicationId) => {
     setLoading(true);
-    fetch(`http://localhost:3000//api/comments?publicationId=${publicationId}`)
+    fetch(`http://localhost:3000/api/comments?publicationId=${publicationId}`) // Fixed URL
       .then(res => {
         if (!res.ok) throw new Error('Erreur lors du chargement des commentaires');
         return res.json();

@@ -65,7 +65,7 @@ app.post("/api/groups", GroupController.post);
 app.get("/api/groups/:id", GroupController.get);
 app.put("/api/groups/:id", GroupController.put);
 app.delete("/api/groups/:id", GroupController.delete);
-app.get("/api/groups/by-category", GroupController.getGroupesByCategory);
+app.get("/api/groups/by-category/:id", GroupController.getGroupesByCategory);
 
 // Routes Messages Privés (MP)
 app.get("/api/mp", MPController.getAll);
