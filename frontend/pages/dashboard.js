@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [Usertoken, setToken] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -8,26 +9,45 @@ const Dashboard = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(true); // Indicateur de chargement
+  const [error, setError] = useState(null); // Gestion des erreurs
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token);
 
     if (token) {
-      fetch("http://localhost:3000/dashboard", {
+      fetch("http://localhost:3000/api/token/decrypt", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              "Erreur lors de la récupération des données utilisateur."
+            );
+          }
+          return response.json();
+        })
         .then((data) => {
           setUserProfile(data);
           setFormData({ name: data.name, email: data.email, password: "" });
         })
-        .catch((error) => console.error("Error fetching profile:", error));
+        .catch((error) => {
+          const token = localStorage.getItem("token");
+          console.log("Token récupéré :", token);
+          console.error("Erreur :", error.message);
+          setError("Impossible de charger les informations utilisateur.");
+          //window.location.href = "/login"; // Redirige vers la page de connexion
+        })
+        .finally(() => setLoading(false));
     } else {
-      console.error("No token found. Please log in.");
-      window.location.href = "/login";
+      console.error(
+        "Aucun token trouvé. Redirection vers la page de connexion."
+      );
+      window.location.href = "/login"; // Redirige si aucun token n'est trouvé
     }
   }, []);
 
@@ -50,19 +70,29 @@ const Dashboard = () => {
         body: JSON.stringify(formData),
       })
         .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Failed to update profile");
+          if (!response.ok) {
+            throw new Error("Erreur lors de la mise à jour du profil.");
           }
+          return response.json();
         })
         .then((updatedData) => {
           setUserProfile(updatedData);
           setEditMode(false);
         })
-        .catch((error) => console.error("Error updating profile:", error));
+        .catch((error) => {
+          console.error("Erreur lors de la mise à jour :", error.message);
+          setError("Impossible de mettre à jour le profil.");
+        });
     }
   };
+
+  if (loading) {
+    return <p>Chargement des informations utilisateur...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: "red" }}>{error}</p>;
+  }
 
   return (
     <div>
@@ -114,7 +144,7 @@ const Dashboard = () => {
           )}
         </div>
       ) : (
-        <p>Chargement des informations du profil...</p>
+        <p>Aucune information utilisateur trouvée.</p>
       )}
     </div>
   );

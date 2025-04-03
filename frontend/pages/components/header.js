@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { UserContext } from "./userContext";
 
 export default function Header() {
-  const { token } = useContext(UserContext);
+  const { token, role } = useContext(UserContext);
+
+  const adminNumber = 1;
 
   return (
     <header id='header'>
@@ -22,11 +24,14 @@ export default function Header() {
 
           {token ? (
             <>
-              {/* {admin === "admin" && (
+              {role == adminNumber && (
                 <li>
                   <Link href='/admin'>Admin</Link>
                 </li>
-              )} */}
+              )}
+              <li>
+                <Link href='/dashboard'>Dashboard</Link>
+              </li>
               <li>
                 <Link href='/logout'>Déconnexion</Link>
               </li>

@@ -44,8 +44,8 @@ export default function AuthForm() {
       if (data.message) {
         setMessage({ type: "error", text: data.message });
       } else {
-        login(data);
-        router.push("/");
+        await login(data);
+        router.replace("/");
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -71,8 +71,8 @@ export default function AuthForm() {
       if (data.message) {
         setMessage({ type: "error", text: data.message });
       } else {
-        login(data);
-        router.push("/");
+        await login(data);
+        router.replace("/");
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
