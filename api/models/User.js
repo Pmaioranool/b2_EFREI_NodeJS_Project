@@ -32,8 +32,13 @@ class User {
     const sqlQuery = "SELECT * FROM users WHERE email = $1";
     const parameter = [email];
     const stmt = await pool.query(sqlQuery, parameter);
+
     if (!stmt.rows.length) {
       return false;
+    }
+
+    if (stmt.rows[0].role_id === 3) {
+      return 'banned'; // User is banned
     }
 
     const isPasswordValid = bcrypt.compareSync(password, stmt.rows[0].password);
@@ -55,26 +60,61 @@ class User {
     return token;
   }
 
-  static async getUserByEmail(email) {
+  static async getUserByEmail(data) {
     const sqlQuery = "SELECT * FROM users WHERE email = $1";
-    const parameter = [email];
+    const parameter = [data.email];
     const stmt = await pool.query(sqlQuery, parameter);
     return stmt.rows[0];
   }
 
-  static async ban(email) {
+static async ban(data) {
+  try {
+    const email = data.email; // Extract email from the data object
+
+    // Check if the user exists
+    const user = await this.getUserByEmail(data);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Update the user's role to "banned" (role_id = 3)
     const sqlQuery = "UPDATE users SET role_id = 3 WHERE email = $1 RETURNING *";
     const parameter = [email];
     const stmt = await pool.query(sqlQuery, parameter);
-    return stmt.rows[0];
-  }
 
-  static async unBan(email) {
+    if (!stmt.rows.length) {
+      throw new Error("Failed to ban the user");
+    }
+
+    return stmt.rows[0]; // Return the updated user
+  } catch (error) {
+    throw error; // Re-throw the error for the caller to handle
+  }
+}
+
+static async unBan(data) {
+  try {
+    const email = data.email; // Extract email from the data object
+    // Check if the user exists
+    const user = await this.getUserByEmail(data);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Update the user's role to "active" (role_id = 2)
     const sqlQuery = "UPDATE users SET role_id = 2 WHERE email = $1 RETURNING *";
     const parameter = [email];
     const stmt = await pool.query(sqlQuery, parameter);
-    return stmt.rows[0];
+
+    if (!stmt.rows.length) {
+      throw new Error("Failed to unban the user");
+    }
+
+    return stmt.rows[0]; // Return the updated user
+  } catch (error) {
+    throw error; // Re-throw the error for the caller to handle
   }
+}
 
 }
 
