@@ -28,13 +28,13 @@ const Forum = () => {
     if (selectedCategory) {
       setLoading(true);
       fetch(`http://localhost:3000/api/groups/by-category?categories_id=${selectedCategory.id}`)
-        .then(res => {
-          if (!res.ok) throw new Error('Erreur lors du chargement des groupes');
-          return res.json();
-        })
-        .then(data => setGroupes(data))
-        .catch(err => setError(err.message))
-        .finally(() => setLoading(false));
+    .then(res => {
+        if (!res.ok) throw new Error('Erreur lors du chargement des groupes');
+        return res.json();
+    })
+    .then(data => setGroupes(data))
+    .catch(err => setError(err.message))
+    .finally(() => setLoading(false));
     }
   }, [selectedCategory]);
 
