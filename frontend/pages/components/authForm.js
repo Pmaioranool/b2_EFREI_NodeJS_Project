@@ -80,6 +80,7 @@ export default function AuthForm() {
   };
 
   return (
+    <>
     <div className={`container ${isSignUp ? "active" : ""}`} id='container'>
       {/* Formulaire d'inscription */}
       <div className='form-container sign-up'>
@@ -170,10 +171,11 @@ export default function AuthForm() {
         </div>
       </div>
 
+      </div>
       {/* Messages d'erreur ou de succès */}
       {message.text && (
         <p className={message.type === "error" ? "error" : "success"}>{message.text}</p>
       )}
-    </div>
+      </>
   );
 }

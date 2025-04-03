@@ -17,17 +17,19 @@ const {
   UserController,
   likesController,
   UGRController,
-  TypeReportController
+  TypeReportController,
 } = require("./controllers/Controller.js");
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: "*", // ou "*" pour autoriser toutes les origines
-  credentials: true, // si vous gérez des cookies ou des sessions
-}));
+app.use(
+  cors({
+    origin: "*", // ou "*" pour autoriser toutes les origines
+    credentials: true, // si vous gérez des cookies ou des sessions
+  })
+);
 // app.use(helmet());
 // app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
@@ -57,8 +59,7 @@ app.get("/api/comments/:id", CommentController.get);
 app.put("/api/comments/:id", CommentController.put);
 app.delete("/api/comments/:id", CommentController.delete);
 
-// Routes Groupes 
-
+// Routes Groupes
 
 app.get("/api/groups", GroupController.getAll);
 app.post("/api/groups", GroupController.post);
@@ -127,7 +128,40 @@ app.post("/api/TypeReport", TypeReportController.post);
 app.get("/api/TypeReport/:id", TypeReportController.get);
 app.put("/api/TypeReport/:id", TypeReportController.put);
 app.delete("/api/TypeReport/:id", TypeReportController.delete);
+app.put("/api/dashboard/update", (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
 
+    if (!token) {
+      return res.status(403).json({ error: "Token manquant !" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: "Token invalide !" });
+      }
+
+      const { name } = req.body;
+
+      if (!name) {
+        return res.status(400).json({ error: "Le champ 'name' est requis." });
+      }
+
+      // Simulez une mise à jour des données utilisateur
+      const updatedUser = {
+        id: decoded.id,
+        name: name,
+        email: decoded.email,
+      };
+
+      res.status(200).json(updatedUser);
+    });
+  } catch (error) {
+    console.error("Erreur interne :", error.message);
+    res.status(500).json({ error: "Une erreur interne s'est produite." });
+  }
+});
 app.get("/api/token/decrypt", (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
@@ -143,7 +177,9 @@ app.get("/api/token/decrypt", (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.error("Erreur de décryptage du token:", err.message);
-        return res.status(401).json({ error: "Erreur de décryptage du token ! "+ err.message });
+        return res
+          .status(401)
+          .json({ error: "Erreur de décryptage du token ! " + err.message });
       }
 
       console.log("Token décodé avec succès:", decoded);

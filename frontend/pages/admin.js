@@ -59,7 +59,7 @@ export default function Forum() {
             onChange={(e) => setBanEmail(e.target.value)}
             required
         />
-        <input type="submit" class="submit" value="bannir l'utilisateur" />
+        <input type="submit" class="submit" value="Ban User" />
     </form>
     <form onSubmit={handleUnBan}>
         <input type="hidden" name="ban" value="unBan" />
@@ -67,7 +67,7 @@ export default function Forum() {
             onChange={(e) => setUnBanEmail(e.target.value)}
             required
             />
-        <input type="submit" class="submit" value="débannir l'utilisateur" />
+        <input type="submit" class="submit" value="UnBan User" />
     </form>
     {message.text && (
         <p className={message.type === "error" ? "error" : "success"}>{message.text}</p>
