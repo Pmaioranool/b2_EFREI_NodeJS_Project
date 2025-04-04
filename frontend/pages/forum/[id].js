@@ -63,7 +63,7 @@ export default function PublicationDetail() {
         `http://localhost:3000/api/users/email/${email}`
       );
       if (!response.ok)
-        throw new Error("Erreur lors de la récupération de l'ID utilisateur");
+        setError("Erreur lors de la récupération de l'ID utilisateur");
       const data = await response.json();
       return data.user_id;
     } catch (error) {

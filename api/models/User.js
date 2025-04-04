@@ -137,6 +137,12 @@ class User {
     const stmt = await pool.query(sqlQuery, [...values, user_id]);
     return stmt.rows[0];
   }
+
+  static async getByEmail(email) {
+    const sqlQuery = `SELECT user_id FROM users WHERE email = $1`;
+    const stmt = await pool.query(sqlQuery, [email]);
+    return stmt.rows[0]; // Retourne un seul utilisateur
+  }
 }
 
 module.exports = User;
