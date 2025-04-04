@@ -118,6 +118,7 @@ export default function PublicationDetail() {
       setComments((prev) => [newComment, ...prev]);
       setCommentContent(""); // Réinitialiser le champ de texte
       setError(null); // Réinitialiser les erreurs
+      router.replace(`/forum/${id}`); //TODO:
     } catch (err) {
       console.error("Erreur :", err);
       setError(err.message); // Afficher l'erreur
@@ -159,7 +160,6 @@ export default function PublicationDetail() {
         <h1 className="publication-title">{publication.title}</h1>
 
         <div className="publication-meta">
-          <span className="content">{publication.content}</span>
           <span className="author">Par {user?.username || "Anonyme"}</span>
           <span className="date">
             Publié le {new Date(publication.creation_date).toLocaleDateString()}
