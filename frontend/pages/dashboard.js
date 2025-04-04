@@ -7,6 +7,7 @@ const Dashboard = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { email } = useContext(UserContext);
 
@@ -27,6 +28,8 @@ const Dashboard = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage({ type: "", text: "" });
 
     const hashedPassword = password
       ? await fetch("http://localhost:3000/api/hash", {
@@ -79,36 +82,44 @@ const Dashboard = () => {
       } else {
         setMessage({ type: "success", text: "Profil mis à jour avec succès." });
       }
+
+      setMessage({ type: "success", text: "Profile updated successfully" });
+      // Clear fields if needed
+      if (password) setPassword("");
     } catch (error) {
-      setMessage({ type: "error", text: error.message });
+      setMessage({
+        type: "error",
+        text: error.message || "An unexpected error occurred",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <section className="admin-container">
       <form onSubmit={handleUpdateProfile}>
         <input
           type="text"
-          placeholder="Nouveau pseudo"
+          placeholder="New username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Nouveau mot de passe"
+          placeholder="New password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <input
           type="date"
-          placeholder="Nouvelle date d'anniversaire"
+          placeholder="New birthdate"
           value={birthdate}
           onChange={(e) => setBirthdate(e.target.value)}
         />
-        <input
-          type="submit"
-          className="submit"
-          value="Mettre à jour le profil"
-        />
+        <button type="submit" className="submit" disabled={isLoading}>
+          {isLoading ? "Updating..." : "Update Profile"}
+        </button>
       </form>
 
       {message.text && (
