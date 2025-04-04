@@ -171,12 +171,7 @@ app.post("/api/users/update", async (req, res) => {
   try {
     const { username, password, birthdate } = req.body;
 
-    // Vérifiez que les champs requis sont présents
-    if (!username || !password || !birthdate) {
-      return res.status(400).json({ error: "Tous les champs sont requis." });
-    }
-
-    // Exemple : Récupérer l'utilisateur connecté via le token
+    // Vérification du token
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
@@ -189,26 +184,41 @@ app.post("/api/users/update", async (req, res) => {
         return res.status(403).json({ error: "Token invalide." });
       }
 
-      const userId = decoded.id; // Assurez-vous que le token contient l'ID utilisateur
+      const userId = decoded.id;
 
-      // Exemple de mise à jour dans la base de données
       try {
-        const result = await UserController.updateProfile(userId, {
-          username,
-          password,
-          birthdate,
-        });
+        // Préparation des données de mise à jour
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (password) updateData.password = password; // Le hash sera géré dans le contrôleur
+        if (birthdate) updateData.birthdate = birthdate;
 
-        if (result) {
-          res.status(200).json({ message: "Profil mis à jour avec succès." });
-        } else {
-          res
-            .status(500)
-            .json({ error: "Erreur lors de la mise à jour du profil." });
+        // Vérification qu'il y a des données à mettre à jour
+        if (Object.keys(updateData).length === 0) {
+          return res
+            .status(400)
+            .json({ error: "Aucune donnée à mettre à jour." });
         }
+
+        // Utilisation de la méthode PUT existante du UserController
+        const updatedUser = await UserController.put(userId, updateData);
+
+        if (!updatedUser) {
+          return res.status(404).json({ error: "Utilisateur non trouvé." });
+        }
+
+        res.status(200).json({
+          message: "Profil mis à jour avec succès.",
+          user: {
+            username: updatedUser.username,
+            birthdate: updatedUser.birthdate,
+          },
+        });
       } catch (dbError) {
         console.error(dbError);
-        res.status(500).json({ error: "Erreur interne du serveur." });
+        res.status(500).json({
+          error: dbError.message || "Erreur lors de la mise à jour du profil.",
+        });
       }
     });
   } catch (error) {
@@ -216,7 +226,6 @@ app.post("/api/users/update", async (req, res) => {
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
 });
-
 // Route pour le décryptage du token
 app.get("/api/token/decrypt", (req, res) => {
   try {
