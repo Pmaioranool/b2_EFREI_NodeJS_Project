@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "./components/userContext";
 
 const Forum = () => {
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [groupes, setGroupes] = useState([]);
@@ -9,6 +12,10 @@ const Forum = () => {
   const [comments, setComments] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [publiContent, setPubliContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [publication, setPublication] = useState([]);
+  const [user, setUser] = useState(null);
 
   // Charger les catégories
   useEffect(() => {
@@ -75,6 +82,78 @@ const Forum = () => {
       .finally(() => setLoading(false));
   };
 
+  const { email } = useContext(UserContext);
+
+  const userId = async (email) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/email/${email}`
+      );
+      if (!response.ok)
+        setError("Erreur lors de la récupération de l'ID utilisateur");
+      const data = await response.json();
+      return data.user_id;
+    } catch (error) {
+      console.error("Erreur:", error);
+      return null;
+    }
+  };
+
+  const handlePublicationSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!email) {
+      router.push("/login"); // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+      return;
+    }
+
+    try {
+      // Récupérer l'ID utilisateur de manière asynchrone
+      const user_id = await userId(email);
+
+      if (!user_id) {
+        setError("Impossible de récupérer l'ID utilisateur.");
+        return;
+      }
+
+      // Vérifier si le contenu du commentaire est vide
+      if (!publiContent.trim()) {
+        setError("La publication ne peut pas être vide.");
+        return;
+      }
+
+      // Envoyer le commentaire au backend
+      const response = await fetch(`http://localhost:3000/api/publications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title, // ID de la publication
+          content: publiContent, // Contenu du commentaire
+          user_id: user_id, // ID de l'utilisateur
+          groupe_id: selectedGroupe.groupe_id, // ID du groupe
+          //title, content, user_id, groupe_id
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'ajout de la publication");
+      }
+
+      const newComment = await response.json();
+
+      // Ajouter le nouveau commentaire à la liste existante
+      setPublication((prev) => [newComment, ...prev]);
+      setPubliContent(""); // Réinitialiser le champ de texte
+      setError(null); // Réinitialiser les erreurs
+      router.replace(`/forum`); //TODO:
+    } catch (err) {
+      console.error("Erreur :", err);
+      setError(err.message); // Afficher l'erreur
+    }
+  };
+
   return (
     <div className="forum-container">
       <h1>Forum Communautaire</h1>
@@ -123,6 +202,25 @@ const Forum = () => {
       {/* publications  */}
       {selectedGroupe && (
         <section className="publications-section">
+          <form onSubmit={handlePublicationSubmit} className="comment-form">
+            <input
+              className="groups-list"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ajouter un titre..."
+              required
+            />
+            <textarea
+              value={publiContent}
+              onChange={(e) => setPubliContent(e.target.value)}
+              placeholder="Ajouter une publication..."
+              required
+            />
+            <button type="submit" className="submit-button">
+              Publier
+            </button>
+          </form>
           {publications.length === 0 ? (
             <div className="error">
               Aucune publication trouvée dans ce groupe.

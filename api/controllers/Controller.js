@@ -253,7 +253,7 @@ const UserController = {
   },
   getByEmail: async (req, res) => {
     try {
-      const item = await User.getByEmail(req.params.email);
+      const item = await User.getUserByEmail(req.params.email);
       item
         ? res.status(200).json(item)
         : res.status(404).json({ message: "Pas trouvé" });
