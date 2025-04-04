@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 
 const {
   CategoryController,
@@ -127,7 +128,6 @@ app.post("/api/users/login", UserController.login);
 app.post("/api/users/ban", UserController.ban);
 app.post("/api/users/unBan", UserController.unBan);
 app.get("/api/users/email/:email", UserController.getByEmail);
-
 app
   .route("/api/users/:id")
   .get(UserController.get)
@@ -167,56 +167,6 @@ app
   .put(TypeReportController.put)
   .delete(TypeReportController.delete);
 
-app.post("/api/users/update", async (req, res) => {
-  try {
-    const { username, password, birthdate } = req.body;
-
-    // Vérifiez que les champs requis sont présents
-    if (!username || !password || !birthdate) {
-      return res.status(400).json({ error: "Tous les champs sont requis." });
-    }
-
-    // Exemple : Récupérer l'utilisateur connecté via le token
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return res.status(401).json({ error: "Token manquant ou invalide." });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-      if (err) {
-        return res.status(403).json({ error: "Token invalide." });
-      }
-
-      const userId = decoded.id; // Assurez-vous que le token contient l'ID utilisateur
-
-      // Exemple de mise à jour dans la base de données
-      try {
-        const result = await UserController.updateProfile(userId, {
-          username,
-          password,
-          birthdate,
-        });
-
-        if (result) {
-          res.status(200).json({ message: "Profil mis à jour avec succès." });
-        } else {
-          res
-            .status(500)
-            .json({ error: "Erreur lors de la mise à jour du profil." });
-        }
-      } catch (dbError) {
-        console.error(dbError);
-        res.status(500).json({ error: "Erreur interne du serveur." });
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Une erreur interne s'est produite." });
-  }
-});
-
 // Route pour le décryptage du token
 app.get("/api/token/decrypt", (req, res) => {
   try {
@@ -236,6 +186,15 @@ app.get("/api/token/decrypt", (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Une erreur interne s'est produite." });
   }
+});
+
+app.post("/api/hash", (req, res) => {
+  const { password } = req.body;
+  if (!password) {
+    return res.status(400).json({ error: "Mot de passe manquant !" });
+  }
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  res.status(200).json(hashedPassword);
 });
 
 // Gestion des erreurs globales
